@@ -13,7 +13,6 @@
  *
  * @author sosoman
  */
-
 import java.lang.*;
 import java.lang.reflect.*;
 import java.util.regex.*;
@@ -27,2721 +26,2743 @@ import java.awt.Dimension;
 
 public class MIPSsimulator extends javax.swing.JFrame {
 
-//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	static JFrame frame = new JFrame();
-	static JFileChooser opener = new JFileChooser();
-	static JFileChooser saver = new JFileChooser();
-	static File myfile;
-	static File logfile;
+  //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  static JFrame frame = new JFrame();
+  static JFileChooser opener = new JFileChooser();
+  static JFileChooser saver = new JFileChooser();
+  static File myfile;
+  static File logfile;
 
-	public static String[][] Instruction = new String[1][10];    // static 2D String array, used to put all Text Instruction
-	public static int[] TextAddress = new int[1002];                // Address for program text
-	public static int[] Register = new int[32];                     // Register file
-	public static int number_of_inst = 0;
-	public static int number_of_break = 0;
-	public static int[] BreakArray = new int[2];
+  public static String[][] Instruction = new String[1][10];    // static 2D String array, used to put all Text Instruction
+  public static int[] TextAddress = new int[1002];                // Address for program text
+  public static int[] Register = new int[32];                     // Register file
+  public static int number_of_inst = 0;
+  public static int number_of_break = 0;
+  public static int[] BreakArray = new int[2];
 
-	public static int[][] ColorTable;             // Color Table
-	public static int[][] ColorTable2;
-	public static int[][] ColorTable3;
-	public static int[][] ColorTable4;
-//****************************************************************************1
-	public static byte[] dataSection = new byte[2]; 		// for data section's contents (unit of memory is byte)
-	public static String[] dataLabel = new String[2]; 
-	//for data section's label (actually only element which is indexed by multiple of 4 will be assigned a label)
-	public static int dataPointer = 0;
-	//recode the current position of the dataSection for filling the data.(start from 0x10000000)
+  public static int[][] ColorTable;             // Color Table
+  public static int[][] ColorTable2;
+  public static int[][] ColorTable3;
+  public static int[][] ColorTable4;
+  //****************************************************************************1
+  public static byte[] dataSection = new byte[2]; 		// for data section's contents (unit of memory is byte)
+  public static String[] dataLabel = new String[2]; 
+  //for data section's label (actually only element which is indexed by multiple of 4 will be assigned a label)
+  public static int dataPointer = 0;
+  //recode the current position of the dataSection for filling the data.(start from 0x10000000)
 
-//****************************************************************************2
-	public static int PC_base = 0x00400000;                         // default PC based address        
-	public static int PC = PC_base;                                 // Program counter
+  //****************************************************************************2
+  public static int PC_base = 0x00400000;                         // default PC based address        
+  public static int PC = PC_base;                                 // Program counter
 
-	public static int dataStartAddr = 0x10000000;			// start address for Static Data
+  public static int dataStartAddr = 0x10008000;			// start address for Static Data
 
-	public static int SP = 0x7ffffffc;                              // Static Pointer
+  public static int SP = 0x7ffffffc;                              // Static Pointer
 
-	public static boolean is_pause = false;                         // test is the PAUSE button is pressed
-	public static boolean is_jump = false;
-	public static boolean thread_exist = false;
-	public static int breakpoint = PC_base + 4*9599;
+  public static boolean is_pause = false;                         // test is the PAUSE button is pressed
+  public static boolean is_jump = false;
+  public static boolean thread_exist = false;
+  public static int breakpoint = PC_base + 4*9599;
 
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+  //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-    /** Creates new form MIPSsimulator */
-    public MIPSsimulator() {
-        initComponents();
-    }
+  /** Creates new form MIPSsimulator */
+  public MIPSsimulator() {
+    initComponents();
+  }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
+  /** This method is called from within the constructor to
+   * initialize the form.
+   * WARNING: Do NOT modify this code. The content of this method is
+   * always regenerated by the Form Editor.
+   */
+  @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jButton7 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jButton8 = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton9 = new javax.swing.JButton();
+      jButton1 = new javax.swing.JButton();
+      jButton2 = new javax.swing.JButton();
+      jButton3 = new javax.swing.JButton();
+      jButton4 = new javax.swing.JButton();
+      jButton5 = new javax.swing.JButton();
+      jButton6 = new javax.swing.JButton();
+      jLabel1 = new javax.swing.JLabel();
+      jSpinner1 = new javax.swing.JSpinner();
+      jButton7 = new javax.swing.JButton();
+      jScrollPane1 = new javax.swing.JScrollPane();
+      jList1 = new javax.swing.JList();
+      jScrollPane2 = new javax.swing.JScrollPane();
+      jTable1 = new javax.swing.JTable();
+      jScrollPane3 = new javax.swing.JScrollPane();
+      jTable2 = new javax.swing.JTable();
+      jButton8 = new javax.swing.JButton();
+      jScrollPane4 = new javax.swing.JScrollPane();
+      jTable3 = new javax.swing.JTable();
+      jScrollPane5 = new javax.swing.JScrollPane();
+      jTable4 = new javax.swing.JTable();
+      jLabel3 = new javax.swing.JLabel();
+      jLabel4 = new javax.swing.JLabel();
+      jLabel5 = new javax.swing.JLabel();
+      jLabel6 = new javax.swing.JLabel();
+      jTextField1 = new javax.swing.JTextField();
+      jButton9 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+      setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setBackground(new java.awt.Color(76, 105, 193));
-        jButton1.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton1.setIconTextGap(6);
-        jButton1.setText("Load");
-        jButton1.setOpaque(true);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-		try{
-                	jButton1ActionPerformed(evt);
-		} catch (Exception whatever){
-			;
-		}
-            }
-        });
+      jButton1.setBackground(new java.awt.Color(76, 105, 193));
+      jButton1.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton1.setForeground(new java.awt.Color(255, 255, 255));
+      jButton1.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton1.setIconTextGap(6);
+      jButton1.setText("Load");
+      jButton1.setOpaque(true);
+      jButton1.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          try{
+            jButton1ActionPerformed(evt);
+          } catch (Exception whatever){
+            ;
+          }
+        }
+      });
 
-        jButton2.setBackground(new java.awt.Color(76, 105, 193));
-        jButton2.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Re-Load");
-        jButton2.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton2.setIconTextGap(6);
-        jButton2.setOpaque(true);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-		try{
-                	jButton2ActionPerformed(evt);
-		} catch (Exception whatever){
-			;
-		}
-            }
-        });
+      jButton2.setBackground(new java.awt.Color(76, 105, 193));
+      jButton2.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton2.setForeground(new java.awt.Color(255, 255, 255));
+      jButton2.setText("Re-Load");
+      jButton2.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton2.setIconTextGap(6);
+      jButton2.setOpaque(true);
+      jButton2.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          try{
+            jButton2ActionPerformed(evt);
+          } catch (Exception whatever){
+            ;
+          }
+        }
+      });
 
-        jButton3.setBackground(new java.awt.Color(76, 105, 193));
-        jButton3.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Go");
-        jButton3.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton3.setIconTextGap(6);
-        jButton3.setOpaque(true);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-		try{
-                	jButton3ActionPerformed(evt);
-		} catch (Exception whatever){
-			;
-		}
-            }
-        });
+      jButton3.setBackground(new java.awt.Color(76, 105, 193));
+      jButton3.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton3.setForeground(new java.awt.Color(255, 255, 255));
+      jButton3.setText("Go");
+      jButton3.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton3.setIconTextGap(6);
+      jButton3.setOpaque(true);
+      jButton3.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          try{
+            jButton3ActionPerformed(evt);
+          } catch (Exception whatever){
+            ;
+          }
+        }
+      });
 
-        jButton4.setBackground(new java.awt.Color(76, 105, 193));
-        jButton4.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Pause");
-        jButton4.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton4.setIconTextGap(6);
-        jButton4.setOpaque(true);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-		try{
-                	jButton4ActionPerformed(evt);
-		} catch (Exception whatever){
-			;
-		}
-            }
-        });
+      jButton4.setBackground(new java.awt.Color(76, 105, 193));
+      jButton4.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton4.setForeground(new java.awt.Color(255, 255, 255));
+      jButton4.setText("Pause");
+      jButton4.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton4.setIconTextGap(6);
+      jButton4.setOpaque(true);
+      jButton4.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          try{
+            jButton4ActionPerformed(evt);
+          } catch (Exception whatever){
+            ;
+          }
+        }
+      });
 
-        jButton5.setBackground(new java.awt.Color(76, 105, 193));
-        jButton5.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Step");
-        jButton5.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton5.setIconTextGap(6);
-        jButton5.setOpaque(true);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-		try{
-                	jButton5ActionPerformed(evt);
-		} catch (Exception whatever){
-			;
-		}
-            }
-        });
+      jButton5.setBackground(new java.awt.Color(76, 105, 193));
+      jButton5.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton5.setForeground(new java.awt.Color(255, 255, 255));
+      jButton5.setText("Step");
+      jButton5.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton5.setIconTextGap(6);
+      jButton5.setOpaque(true);
+      jButton5.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          try{
+            jButton5ActionPerformed(evt);
+          } catch (Exception whatever){
+            ;
+          }
+        }
+      });
 
-        jButton6.setBackground(new java.awt.Color(76, 105, 193));
-        jButton6.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton6.setForeground(new java.awt.Color(255, 255, 255));
-        jButton6.setText("Breakpoint");
-        jButton6.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton6.setIconTextGap(6);
-        jButton6.setOpaque(true);
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-		try{
-                	jButton6ActionPerformed(evt);
-		} catch (Exception whatever){
-			;
-		}
-            }
-        });
+      jButton6.setBackground(new java.awt.Color(76, 105, 193));
+      jButton6.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton6.setForeground(new java.awt.Color(255, 255, 255));
+      jButton6.setText("Breakpoint");
+      jButton6.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton6.setIconTextGap(6);
+      jButton6.setOpaque(true);
+      jButton6.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          try{
+            jButton6ActionPerformed(evt);
+          } catch (Exception whatever){
+            ;
+          }
+        }
+      });
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Speed");
-        jLabel1.setBorder(null);
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+      jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
+      jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+      jLabel1.setText("Speed");
+      jLabel1.setBorder(null);
+      jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jSpinner1.setFont(new java.awt.Font("DejaVu Sans", 1, 18));
+      jSpinner1.setFont(new java.awt.Font("DejaVu Sans", 1, 18));
 
-        jButton7.setBackground(new java.awt.Color(76, 105, 193));
-        jButton7.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton7.setForeground(new java.awt.Color(255, 255, 255));
-        jButton7.setText("Save Log");
-        jButton7.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton7.setIconTextGap(6);
-        jButton7.setOpaque(true);
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
+      jButton7.setBackground(new java.awt.Color(76, 105, 193));
+      jButton7.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton7.setForeground(new java.awt.Color(255, 255, 255));
+      jButton7.setText("Save Log");
+      jButton7.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton7.setIconTextGap(6);
+      jButton7.setOpaque(true);
+      jButton7.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          jButton7ActionPerformed(evt);
+        }
+      });
 
-        jList1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jList1.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jList1.setForeground(new java.awt.Color(0, 0, 0));
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Decimal", "Hex", "Text" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.setAutoscrolls(false);
-        jList1.setPreferredSize(new java.awt.Dimension(54, 57));
-        jList1.setRequestFocusEnabled(false);
-        jList1.setSelectionBackground(new java.awt.Color(120, 156, 215));
-        jList1.setValueIsAdjusting(true);
-        jScrollPane1.setViewportView(jList1);
+      jList1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+      jList1.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jList1.setForeground(new java.awt.Color(0, 0, 0));
+      jList1.setModel(new javax.swing.AbstractListModel() {
+        String[] strings = { "Decimal", "Hex", "Text" };
+        public int getSize() { return strings.length; }
+        public Object getElementAt(int i) { return strings[i]; }
+      });
+      jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+      jList1.setAutoscrolls(false);
+      jList1.setPreferredSize(new java.awt.Dimension(54, 57));
+      jList1.setRequestFocusEnabled(false);
+      jList1.setSelectionBackground(new java.awt.Color(120, 156, 215));
+      jList1.setValueIsAdjusting(true);
+      jScrollPane1.setViewportView(jList1);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+      jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+              {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null}
             },
-            new String [] {
-                "Address", "Label", "Instruction"
+                new String [] {
+                  "Address", "Label", "Instruction"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
+      ) {
+        boolean[] canEdit = new boolean [] {
+          false, false, false
+        };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable1.setColumnSelectionAllowed(true);
-        jTable1.setGridColor(new java.awt.Color(38, 79, 117));
-        jTable1.setRowHeight(19);
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(120);
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+          return canEdit [columnIndex];
+        }
+      });
+      jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+      jTable1.setColumnSelectionAllowed(true);
+      jTable1.setGridColor(new java.awt.Color(38, 79, 117));
+      jTable1.setRowHeight(19);
+      jTable1.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable1.getTableHeader().setReorderingAllowed(false);
+      jScrollPane2.setViewportView(jTable1);
+      jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable1.getColumnModel().getColumn(0).setPreferredWidth(70);
+      jTable1.getColumnModel().getColumn(1).setPreferredWidth(70);
+      jTable1.getColumnModel().getColumn(2).setPreferredWidth(120);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+      jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"$zero", 0},
-                {"$at", 0},
-                {"$v0", 0},
-                {"$v1", 0},
-                {"$a0", 0},
-                {"$a1", 0},
-                {"$a2", 0},
-                {"$a3", 0},
-                {"$t0", 0},
-                {"$t1", 0},
-                {"$t2", 0},
-                {"$t3", 0},
-                {"$t4", 0},
-                {"$t5", 0},
-                {"$t6", 0},
-                {"$t7", 0},
-                {"$s0", 0},
-                {"$s1", 0},
-                {"$s2", 0},
-                {"$s3", 0},
-                {"$s4", 0},
-                {"$s5", 0},
-                {"$s6", 0},
-                {"$s7", 0},
-                {"$t8", 0},
-                {"$t9", 0},
-                {"$k0", 0},
-                {"$k1", 0},
-                {"$gp", 0},
-                {"$sp", 0},
-                {"$fp", 0},
-                {"$ra", 0}
+              {"$zero", 0},
+        {"$at", 0},
+        {"$v0", 0},
+        {"$v1", 0},
+        {"$a0", 0},
+        {"$a1", 0},
+        {"$a2", 0},
+        {"$a3", 0},
+        {"$t0", 0},
+        {"$t1", 0},
+        {"$t2", 0},
+        {"$t3", 0},
+        {"$t4", 0},
+        {"$t5", 0},
+        {"$t6", 0},
+        {"$t7", 0},
+        {"$s0", 0},
+        {"$s1", 0},
+        {"$s2", 0},
+        {"$s3", 0},
+        {"$s4", 0},
+        {"$s5", 0},
+        {"$s6", 0},
+        {"$s7", 0},
+        {"$t8", 0},
+        {"$t9", 0},
+        {"$k0", 0},
+        {"$k1", 0},
+        {"$gp", 0},
+        {"$sp", 0},
+        {"$fp", 0},
+        {"$ra", 0}
             },
-            new String [] {
-                "Name", "Value"
+                new String [] {
+                  "Name", "Value"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
+      ) {
+        boolean[] canEdit = new boolean [] {
+          false, false
+        };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+          return canEdit [columnIndex];
+        }
+      });
 
-        jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable2.setColumnSelectionAllowed(true);
-        jTable2.setGridColor(new java.awt.Color(38, 79, 117));
-        jTable2.setRowHeight(19);
-        jTable2.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable2.getTableHeader().setReorderingAllowed(false);
-        jScrollPane3.setViewportView(jTable2);
-        jTable2.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable2.getColumnModel().getColumn(0).setPreferredWidth(30);
-        jTable2.getColumnModel().getColumn(1).setPreferredWidth(70);
+      jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+      jTable2.setColumnSelectionAllowed(true);
+      jTable2.setGridColor(new java.awt.Color(38, 79, 117));
+      jTable2.setRowHeight(19);
+      jTable2.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable2.getTableHeader().setReorderingAllowed(false);
+      jScrollPane3.setViewportView(jTable2);
+      jTable2.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable2.getColumnModel().getColumn(0).setPreferredWidth(30);
+      jTable2.getColumnModel().getColumn(1).setPreferredWidth(70);
 
-        jButton8.setBackground(new java.awt.Color(76, 105, 193));
-        jButton8.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton8.setForeground(new java.awt.Color(255, 255, 255));
-        jButton8.setText("Format");
-        jButton8.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton8.setIconTextGap(6);
-        jButton8.setOpaque(true);
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
+      jButton8.setBackground(new java.awt.Color(76, 105, 193));
+      jButton8.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton8.setForeground(new java.awt.Color(255, 255, 255));
+      jButton8.setText("Format");
+      jButton8.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton8.setIconTextGap(6);
+      jButton8.setOpaque(true);
+      jButton8.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          jButton8ActionPerformed(evt);
+        }
+      });
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+      jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+              {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null},
+        {null, null, null}
             },
-            new String [] {
-                "Address", "Label", "Value"
+                new String [] {
+                  "Address", "Label", "Value"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
+      ) {
+        boolean[] canEdit = new boolean [] {
+          false, false, false
+        };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+          return canEdit [columnIndex];
+        }
+      });
 
-        jTable3.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable3.setColumnSelectionAllowed(true);
-        jTable3.setGridColor(new java.awt.Color(38, 79, 117));
-        jTable3.setRowHeight(19);
-        jTable3.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable3.getTableHeader().setReorderingAllowed(false);
-        jScrollPane4.setViewportView(jTable3);
-        jTable3.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable3.getColumnModel().getColumn(0).setPreferredWidth(70);
-        jTable3.getColumnModel().getColumn(1).setPreferredWidth(70);
-        jTable3.getColumnModel().getColumn(2).setPreferredWidth(70);
+      jTable3.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+      jTable3.setColumnSelectionAllowed(true);
+      jTable3.setGridColor(new java.awt.Color(38, 79, 117));
+      jTable3.setRowHeight(19);
+      jTable3.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable3.getTableHeader().setReorderingAllowed(false);
+      jScrollPane4.setViewportView(jTable3);
+      jTable3.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable3.getColumnModel().getColumn(0).setPreferredWidth(70);
+      jTable3.getColumnModel().getColumn(1).setPreferredWidth(70);
+      jTable3.getColumnModel().getColumn(2).setPreferredWidth(70);
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+      jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+              {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null},
+        {null, null}
             },
-            new String [] {
-                "Address", "Value"
+                new String [] {
+                  "Address", "Value"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
+      ) {
+        boolean[] canEdit = new boolean [] {
+          false, false
+        };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+          return canEdit [columnIndex];
+        }
+      });
 
-        jTable4.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTable4.setColumnSelectionAllowed(true);
-        jTable4.setGridColor(new java.awt.Color(38, 79, 117));
-        jTable4.setRowHeight(19);
-        jTable4.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable4.getTableHeader().setReorderingAllowed(false);
-        jScrollPane5.setViewportView(jTable4);
-        jTable4.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        jTable4.getColumnModel().getColumn(0).setPreferredWidth(70);
-        jTable4.getColumnModel().getColumn(1).setPreferredWidth(70);
+      jTable4.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+      jTable4.setColumnSelectionAllowed(true);
+      jTable4.setGridColor(new java.awt.Color(38, 79, 117));
+      jTable4.setRowHeight(19);
+      jTable4.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable4.getTableHeader().setReorderingAllowed(false);
+      jScrollPane5.setViewportView(jTable4);
+      jTable4.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+      jTable4.getColumnModel().getColumn(0).setPreferredWidth(70);
+      jTable4.getColumnModel().getColumn(1).setPreferredWidth(70);
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Program");
-        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+      jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
+      jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+      jLabel3.setText("Program");
+      jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Stack");
-        jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+      jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
+      jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+      jLabel4.setText("Stack");
+      jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel5.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("  Registers");
-        jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+      jLabel5.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
+      jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+      jLabel5.setText("  Registers");
+      jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Memory");
-        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+      jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
+      jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+      jLabel6.setText("Memory");
+      jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jTextField1.setFont(new java.awt.Font("DejaVu Sans", 1, 18));
-        jTextField1.setText("jTextField1");
+      jTextField1.setFont(new java.awt.Font("DejaVu Sans", 1, 18));
+      jTextField1.setText("jTextField1");
 
-        jButton9.setBackground(new java.awt.Color(76, 105, 193));
-        jButton9.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
-        jButton9.setForeground(new java.awt.Color(255, 255, 255));
-        jButton9.setText("Go to:");
-        jButton9.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
-        jButton9.setIconTextGap(6);
-        jButton9.setOpaque(true);
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
+      jButton9.setBackground(new java.awt.Color(76, 105, 193));
+      jButton9.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
+      jButton9.setForeground(new java.awt.Color(255, 255, 255));
+      jButton9.setText("Go to:");
+      jButton9.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
+      jButton9.setIconTextGap(6);
+      jButton9.setOpaque(true);
+      jButton9.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+          jButton9ActionPerformed(evt);
+        }
+      });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
+      javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+      getContentPane().setLayout(layout);
+      layout.setHorizontalGroup(
+          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+              .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(41, 41, 41))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, 0, 0, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(45, 45, 45))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                  .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(35, 35, 35)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(41, 41, 41))
+                  .addGroup(layout.createSequentialGroup()
+                    .addComponent(jScrollPane2, 0, 0, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(45, 45, 45))))
+                );
+      layout.setVerticalGroup(
+          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(layout.createSequentialGroup()
+            .addGap(20, 20, 20)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel3)
+              .addComponent(jLabel5)
+              .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel4))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
+                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(18, Short.MAX_VALUE))
+                    );
 
-        pack();
+      pack();
     }// </editor-fold>
 
-//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    int loadFile(File myfile) throws Exception{
+  int loadFile(File myfile) throws Exception{
 
-			BufferedReader myBufferedReader = new BufferedReader(new FileReader(myfile));
-			String rawline;
-			boolean is_text = true;                                   // is_text tells us the line should be put in "text" or "data"  
-			int index = 0;                                            // index is the index of Text and its Address space
-//******************************************************************************************1
-			int index_of_line = 1; 
-//******************************************************************************************2
-			while ((rawline = myBufferedReader.readLine()) != null) { 
+    BufferedReader myBufferedReader = new BufferedReader(new FileReader(myfile));
+    String rawline;
+    boolean is_text = true;                                   // is_text tells us the line should be put in "text" or "data"  
+    int index = 0;                                            // index is the index of Text and its Address space
+    //******************************************************************************************1
+    int index_of_line = 1; 
+    //******************************************************************************************2
+    while ((rawline = myBufferedReader.readLine()) != null) { 
 
-				rawline = rawline.trim();
-				String[] temp = rawline.split("\\s+");            // temp store the separate words of rawline(used to test .data, .text)
-				int length = temp.length;                         // compute the length of temp.
-				int index2 = 1;                                   // use index2 to refer the  
-				String text_content = "";                         // store the concatenated instruction, ex. add + $t0 + $ t1 
+      rawline = rawline.trim();
+      String[] temp = rawline.split("\\s+");            // temp store the separate words of rawline(used to test .data, .text)
+      int length = temp.length;                         // compute the length of temp.
+      int index2 = 1;                                   // use index2 to refer the  
+      String text_content = "";                         // store the concatenated instruction, ex. add + $t0 + $ t1 
 
- 				if(rawline.trim().equals("") || rawline.charAt(0) == '#'){
-					continue;                                 // if length == 0, or first char is "#", this line is space or common
-				}
-				else{
-					if(temp[0].equals(".data")){
-						if(length == 1)
-							is_text = false;
-						else if(length == 2){
-							if((temp[1].substring(0,2).equals("0x") || temp[1].substring(0,2).equals("0X")) &&     
-                                                                                                  MIPSsimulator.is_number_hex(temp[1].substring(2))){
-								dataStartAddr = Integer.parseInt(temp[1].substring(2),16);
-								is_text = false;
-							}
-							else if(MIPSsimulator.is_number(temp[1])){
-								dataStartAddr = Integer.parseInt(temp[1]);
-								is_text = false;
-							}
-							else{
-								System.out.println("Systax error at line:" + index);
-								System.out.println(rawline);
-								System.out.println(temp[1] + " is not a valid number");
-								System.out.println("Please fix it before continuing !");
-								return -1;
-							}
-						}
-						else{ 
-							System.out.println("Syntax error at line: " + index);
-							System.out.println(rawline);
-							System.out.println("Please fix it before continuing !");
-							return -1;
-						}
-						
-					}
-					else if(temp[0].equals(".text")){
-						if(length == 1)
-							is_text = true;
-						else if(length == 2){
-							if((temp[1].substring(0,2).equals("0x") || temp[1].substring(0,2).equals("0X"))
-						                              			&& MIPSsimulator.is_number_hex(temp[1].substring(2))){
-								int claim_PC_base = Integer.parseInt(temp[1].substring(2),16);
-								if(claim_PC_base >= 0x00400000 && claim_PC_base <= 0x10008000 && claim_PC_base % 4 == 0){
-									PC_base = Integer.parseInt(temp[1].substring(2),16);
-									PC = PC_base;
-									is_text = true;
-								}
-								else{
-									System.out.println(temp[1] + " is not a valid start address for program counter!");
-							System.out.println("Must be in the range [0x00400000, 0x10008000], and must be multiple of 4");
-									return -1;
-								}
-							}
-							else if(MIPSsimulator.is_number(temp[1])){
-								int claim_PC_base = Integer.parseInt(temp[1]);
-								if(claim_PC_base >= 0x00400000 && claim_PC_base <= 0x10008000 && claim_PC_base % 4 == 0){
-									PC_base = Integer.parseInt(temp[1]);
-									PC = PC_base;
-									is_text = true;
-								}
-								else{
-                                                                        System.out.println(temp[1] + " is not a valid start address for program counter!");
-                                                        System.out.println("Must be in the range [0x00400000, 0x10008000], and must be multiple of 4");
-                                                                        return -1;
-                                                                }
-
-							}
-							else{
-								System.out.println("Systax error at line:" + index);
-								System.out.println(rawline);
-								System.out.println(temp[1] + " is not a valid number");
-								System.out.println("Please fix it before continuing !");
-								return -1;
-							}
-						}
-						else{ 
-							System.out.println("Syntax error at line: " + index);
-							System.out.println(rawline);
-							System.out.println("Please fix it before continuing !");
-							return -1;
-						}
-					}
-					else if(is_text == false){                // the line should be putted in data section
-//**********************************************************************************************1
-						int return_value = decodeData(rawline);
-						if (return_value == -1) {
-							System.out.println("Syntax Error at line:"+index_of_line);
-							System.out.println(rawline);
-							System.out.println("Please fix it before continuing !");
-							return -1;
-						}
-//**********************************************************************************************2
-					}
-					else if(is_text == true){                 
-
-//**********************************************************************************************1    //Instruction & Table1 grow
-						int rows = jTable1.getRowCount();
-						if (index == rows) {
-							DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-							tableModel.addRow(new Object[]{"","",""});
-						} 
-						if (index >= Instruction.length) {
-							String[][] Temp = Instruction;
-							Instruction = new String[Instruction.length + 100][10];
-							for (int i = 0; i < Temp.length; i++) {
-								Instruction[i] = Temp[i];
-							}
-						}
-//**********************************************************************************************2
-						MIPSsimulator.parse(rawline, MIPSsimulator.Instruction[index]);
-
-						if(MIPSsimulator.Instruction[index][0] != null){
-							jTable1.getModel().setValueAt(MIPSsimulator.Instruction[index][0], index, 1);
-						}
-						for(index2 = 1; MIPSsimulator.Instruction[index][index2] != null; index2++){
-							text_content = text_content.concat(" ").concat(MIPSsimulator.Instruction[index][index2]);
-	 	               			}
-
-						jTable1.getModel().setValueAt(text_content, index, 2);
-//**********************************************************************************************1    //TextAddress grow
-						if (index >= TextAddress.length) {
-							int[] Temp = TextAddress;
-							TextAddress = new int[TextAddress.length + 100];
-							System.arraycopy(Temp,0,TextAddress,0,Temp.length);	
-						}
-//**********************************************************************************************2
-						MIPSsimulator.TextAddress[index] = PC_base + 4*index;
-						jTable1.getModel().setValueAt("0x".concat(Integer.toString(PC_base + 4*index, 16)), index, 0);
-						//jTable1.getModel().setValueAt(Integer.toString(PC_base + 4*index), index, 0);
-						index++;
-					}
-//**********************************************************************************************1
-					index_of_line++;
-				}					    	
-		        }
-			myBufferedReader.close();
-			MIPSsimulator.displayData_16();
-			MIPSsimulator.displayDataLabel();
-			MIPSsimulator.displayDataAddr();
-//**********************************************************************************************2
-			number_of_inst = index;
-//**********************************************************************************************1   //BreakArray grow
-			if (number_of_inst >= BreakArray.length) {
-				int[] Temp = BreakArray;
-				BreakArray = new int[number_of_inst];
-				System.arraycopy(Temp,0,BreakArray,0,Temp.length);	
-			}
-//**********************************************************************************************2
-			for(int i = 0; i < number_of_inst; i++){                                  // Initialize Break Point Table to -1 
-				MIPSsimulator.BreakArray[i] = -1;
-			}
-//**********************************************************************************************1   //determine ColorTable size 
-			ColorTable = new int[jTable1.getRowCount()][3];
-			ColorTable2 = new int[jTable2.getRowCount()][2];
-			ColorTable3 = new int[jTable3.getRowCount()][3];
-			ColorTable4 = new int[jTable4.getRowCount()][2];
-
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-           	public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
-
-                	JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
-
-                	label.setForeground(Color.black);
-
-                	/* return value */
-
-                	JComponent retComponent = null;
-
-                	if(ColorTable[row][col] == -1) {                               // -1 represent the instruction in this cell is now running
-                	        label.setBackground(new Color(248,255,35));
-                	    	retComponent = label;
-                	}
-			else if(ColorTable[row][col] == -2)  {                         // -2 represent its a BreakPoint
-                	        label.setBackground(new Color(238,155,15));
-                	    	retComponent = label;
-                	}
-			else if(ColorTable[row][col] == -3)  {                         // -3 represent its an error line
-                	        label.setBackground(new Color(255,19,0));
-                	    	retComponent = label;
-                	}
-			else if(isSelected)  {
-                	        label.setBackground(new Color(201,224,246));
-                	    	retComponent = label;
-                	}
-			else if(row % 2 == 0){ 
-				label.setBackground(new Color(255,255,255));
-				retComponent = label;
-			}
-			else if(row % 2 == 1){ 
-				label.setBackground(new Color(236,242,248));
-				retComponent = label;
-			}
-
-
-                	return retComponent;
+      if(rawline.trim().equals("") || rawline.charAt(0) == '#'){
+        continue;                                 // if length == 0, or first char is "#", this line is space or common
+      }
+      else{
+        if(temp[0].equals(".data")){
+          if(length == 1)
+            is_text = false;
+          else if(length == 2){
+            if((temp[1].substring(0,2).equals("0x") || temp[1].substring(0,2).equals("0X")) &&     
+                MIPSsimulator.is_number_hex(temp[1].substring(2))){
+              //dataStartAddr = Integer.parseInt(temp[1].substring(2),16);
+              is_text = false;
                 }
-	};
-
-        DefaultTableCellRenderer renderer2 = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-           	public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
-
-                	JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
-
-                	label.setForeground(Color.black);
-
-                	/* return value */
-
-                	JComponent retComponent = null;
-
-                	if(ColorTable2[row][col] == -1) {                               // -1 represent this register's value is changed (destination)
-                	        label.setBackground(new Color(238,112,123));
-                	    	retComponent = label;
-                	}
-			else if(ColorTable2[row][col] == -2)  {                         // -2 represent this register is source register
-                	        label.setBackground(new Color(149,218,102));
-                	    	retComponent = label;
-                	}
-			else if(isSelected)  {
-                	        label.setBackground(new Color(201,224,246));
-                	    	retComponent = label;
-                	}
-			else if(row % 2 == 0){ 
-				label.setBackground(new Color(255,255,255));
-				retComponent = label;
-			}
-			else if(row % 2 == 1){ 
-				label.setBackground(new Color(236,242,248));
-				retComponent = label;
-			}
-
-                	return retComponent;
-                }
-	};
-
-        DefaultTableCellRenderer renderer3 = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-           	public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
-
-                	JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
-
-                	label.setForeground(Color.black);
-
-                	/* return value */
-
-                	JComponent retComponent = null;
-
-                	if(ColorTable3[row][col] == -1) {                               // -1 represent 
-                	        label.setBackground(new Color(238,155,15));
-                	    	retComponent = label;
-                	}
-			else if(ColorTable3[row][col] == -2)  {
-                	        label.setBackground(new Color(255,19,0));
-                	    	retComponent = label;
-                	}
-			else if(isSelected)  {
-                	        label.setBackground(new Color(201,224,246));
-                	    	retComponent = label;
-                	}
-			else if(row % 2 == 0){ 
-				label.setBackground(new Color(255,255,255));
-				retComponent = label;
-			}
-			else if(row % 2 == 1){ 
-				label.setBackground(new Color(236,242,248));
-				retComponent = label;
-			}
-
-                	return retComponent;
-                }
-	};
-
-        DefaultTableCellRenderer renderer4 = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-           	public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
-
-                	JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
-
-                	label.setForeground(Color.black);
-
-                	/* return value */
-
-                	JComponent retComponent = null;
-
-                	if(ColorTable4[row][col] == -1) {                               
-                	        label.setBackground(new Color(238,112,123));
-                	    	retComponent = label;
-                	}
-			else if(ColorTable4[row][col] == -2)  {                         
-                	        label.setBackground(new Color(149,218,102));
-                	    	retComponent = label;
-                	}
-			else if(isSelected)  {
-                	        label.setBackground(new Color(201,224,246));
-                	    	retComponent = label;
-                	}
-			else if(row % 2 == 0){ 
-				label.setBackground(new Color(255,255,255));
-				retComponent = label;
-			}
-			else if(row % 2 == 1){ 
-				label.setBackground(new Color(236,242,248));
-				retComponent = label;
-			}
-
-                	return retComponent;
-                }
-	};
-
-        for(int i=0 ; i < jTable1.getColumnCount() ; i++) {
-
-            	jTable1.getColumnModel().getColumn(i).setCellRenderer(renderer);
-
-        }
-
-        for(int i=0 ; i < jTable2.getColumnCount() ; i++) {
-
-            	jTable2.getColumnModel().getColumn(i).setCellRenderer(renderer2);
-
-        }
-
-        for(int i=0 ; i < jTable3.getColumnCount() ; i++) {
-
-            	jTable3.getColumnModel().getColumn(i).setCellRenderer(renderer3);
-
-        }
-
-        for(int i=0 ; i < jTable4.getColumnCount() ; i++) {
-
-            	jTable4.getColumnModel().getColumn(i).setCellRenderer(renderer4);
-
-        }                                                                         // Set color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	jTable1.selectAll();
-	jTable2.selectAll();
-	jTable3.selectAll();
-	jTable4.selectAll();
-	jTable1.clearSelection();
-	jTable2.clearSelection();
-	jTable3.clearSelection();
-	jTable4.clearSelection();
-
-	return 0;
-    }
-
-    private int initializeData() {
-
-        Instruction = new String[1][10];    		// static 2D String array, used to put all Text Instruction
-        TextAddress = new int[1002];                // Address for program text
-        Register = new int[32];                     // Register file
-        number_of_inst = 0;
-        number_of_break = 0;
-        BreakArray = new int[2];
-
-        ColorTable = new int[32][3];             // Color Table
-        ColorTable2 = new int[32][2];
-        ColorTable3 = new int[32][3];
-        ColorTable4 = new int[32][2];
-
-        for(int i = 0; i < jTable1.getRowCount(); i++){
-                jTable1.getModel().setValueAt(null,i,0);
-                jTable1.getModel().setValueAt(null,i,1);
-                jTable1.getModel().setValueAt(null,i,2);
-        }
-
-        for(int i = 0; i < jTable2.getRowCount(); i++){
-                jTable2.getModel().setValueAt(0,i,1);
-        }
-       
-        for(int i = 0; i < jTable3.getRowCount(); i++){
-                jTable3.getModel().setValueAt(null,i,0);
-                jTable3.getModel().setValueAt(null,i,1);
-                jTable3.getModel().setValueAt(null,i,2);
-        }
-       
-        for(int i = 0; i < jTable4.getRowCount(); i++){
-                jTable4.getModel().setValueAt(null,i,0);
-                jTable4.getModel().setValueAt(null,i,1);
-        }
-
-        dataSection = new byte[2];                    // for data section's contents (unit of memory is byte)
-        dataLabel = new String[2];
-        dataPointer = 0;
-        PC_base = 0x00400000;                         // default PC based address        
-        PC = PC_base;                                 // Program counter
-
-        dataStartAddr = 0x10000000;                   // start address for Static Data
-        SP = 0x7ffffffc;                              // Static Pointer
-
-        is_pause = false;                         // test is the PAUSE button is pressed
-        is_jump = false;
-        thread_exist = false;
-        breakpoint = PC_base + 4*9599;
-	
-	return 0;
-    }
- 
-    private int jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{  
- 			      
-        jSpinner1.setValue((int) 60);                        	 		  // set the initialized speed 				     
-	int returnVal = opener.showOpenDialog(frame);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			myfile = opener.getSelectedFile();
-
-        		try {
-				initializeData();
-				int ret = loadFile(myfile);                                 // Put the original codes into LoadFile (above) method!
-				if(ret == -1)
-					System.out.println("Load file fail!");
-				else if(ret == 0)
-					System.out.println("Load file success!");
-        		} 
-        		catch (Exception ex){
-            			return -1;
-        		}
-                }
-        return 0;
-    }
-
-//**********************************************************************************************1                             
-	public static void displayData_10() {
-		for (int i = 0; i < dataPointer/4; i++) {
-			int byte4 = (dataSection[4*i] << 24) 
-				+ ((dataSection[4*i+1] & 0xFF) << 16) 
-				+ ((dataSection[4*i+2] & 0xFF) << 8) 
-				+ (dataSection[4*i+3] & 0xFF);
-			int rows = jTable3.getRowCount();
-			if (i == rows) {
-				DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
-				tableModel.addRow(new Object[]{"","",""});
-			} 
-			jTable3.getModel().setValueAt(Integer.toString(byte4, 10), i, 2);
-		}
-	}
-	public static void displayData_16() {
-		for (int i = 0; i < dataPointer/4; i++) {
-			int byte4 = (dataSection[4*i] << 24) 
-			+ ((dataSection[4*i+1] & 0xFF) << 16) 
-			+ ((dataSection[4*i+2] & 0xFF) << 8) 
-			+ (dataSection[4*i+3] & 0xFF);
-			int rows = jTable3.getRowCount();
-			if (i == rows) {
-                                DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
-                                tableModel.addRow(new Object[]{"","",""}); 
-                        }
-			jTable3.getModel().setValueAt("0x".concat(Integer.toString(byte4, 16)), i, 2);
-		}
-	}
-        public static void displayDataLabel() {
-		if (dataPointer >= dataLabel.length) {
-			String[] Temp = dataLabel;
-			dataLabel = new String[dataPointer];
-			System.arraycopy(Temp,0,dataLabel,0,Temp.length);
-		}
-		for (int i = 0; i < dataPointer/4; i++) {
-			if (dataLabel[4*i] != null) {
-				jTable3.getModel().setValueAt(dataLabel[4*i], i, 1);
-			}
-		}
-	}
-	public static void displayDataAddr() {
-		for (int i = 0; i < dataPointer/4; i++) {
-			jTable3.getModel().setValueAt("0x".concat(Integer.toString(dataStartAddr+i*4, 16)), i, 0);
-		}
-	}
-
-//**********************************************************************************************2     
-	public static int parse(String rawline, String[] inst_fragment){        // Input the rawline, output -1 : error, output 0 : correct
- 
-		rawline = rawline.trim();
-                String[] coma_result = rawline.split(":");
-
-                if(coma_result.length>1){
-                        inst_fragment[0] = coma_result[0].trim();               // inst_fragment[0] is LABEL, if no label, put "null" 
-                        rawline = coma_result[1];
-                }
-		else{
-			inst_fragment[0] = null;			
-		}
-
-		rawline = rawline.trim();
-                String[] common_result = rawline.split("#");
-                if(common_result.length > 1){
-                        rawline = common_result[0];
-                }
-
-                String[] inst_result = rawline.split("\\s+");
-		String[] temp;
-
-		int k = 1;
-                for(int i=0; i<inst_result.length; i++){
-			temp = inst_result[i].split(",");
-
-			if(temp.length > 1){
-				for(int j=0; j<temp.length;j++){
-					inst_fragment[k++] = temp[j];
-				}
-			}
-			else if(temp.length == 1){
-				inst_fragment[k++] = temp[0];
-			}
-                }
-
-		return 0;
-
-	}
-
-    	public static int execute(int index){                      // Input is the index of "Instruction" and "Address"
-
-		String[] I = Instruction[index];
-		int r_index, s1_index, s2_index, immediate;
-		int find_out = -1;		
-	
-		if(I[1] == null)                                   // There is no instruction in this element
-			return -1;                                 // Send -1 to let main function stop
-
-		for(int i = 0; i < number_of_inst; i++){  	      // set the previous instruction line to be original color
-			if(ColorTable[i][2] != -2 && ColorTable[i][2] != -3){
-				ColorTable[i][0] = 0;	 
-				ColorTable[i][1] = 0;
-				ColorTable[i][2] = 0;
-			}
-		}
-		jTable1.selectAll();
-		jTable1.clearSelection();
-
-		for(int i = 0; i < 32; i++){			      // Set all cells in Register table to be original color
-			ColorTable2[i][0] = 0;			 
-			ColorTable2[i][1] = 0;
-		}
-		jTable2.selectAll();
-		jTable2.clearSelection();
-
-		switch(Op.toOp(I[1])){
-
-			case addi:
-			case add: 
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <add(i)> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				s2_index = MIPSsimulator.find_reg(I[4]);
-
-				if(s2_index == -1){	
-				
-					if(!MIPSsimulator.is_number(I[4])){
-
-						if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
-						                              			&& MIPSsimulator.is_number_hex(I[4].substring(2))){
-
-							immediate = Integer.parseInt(I[4].substring(2),16);
-							Register[r_index] = Register[s1_index] + immediate;
-							jTable2.getModel().setValueAt(Register[r_index], r_index, 1); // set value in Reg Table
-						}					
-						else{
-							System.out.println("Error: ilegal source " + I[4] + " !");           				 
-							return -1;
-						}
-					}
-					else if(MIPSsimulator.is_number(I[4])){
-
-						immediate = Integer.parseInt(I[4]);
-
-						Register[r_index] = Register[s1_index] + immediate;
-
-						jTable2.getModel().setValueAt(Register[r_index], r_index, 1);         // set value in Reg Table
-					}
-				}
-				else{
-					Register[r_index] = Register[s1_index] + Register[s2_index];
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);                 // set value in Reg Table 
-				}
-			
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-
-			case sub:
-			case subi:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <sub(i)> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + "!\n");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				s2_index = MIPSsimulator.find_reg(I[4]);
-				if(s2_index == -1){					
-					if(!MIPSsimulator.is_number(I[4])){
-						if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
-						                              			&& MIPSsimulator.is_number_hex(I[4].substring(2))){
-							immediate = Integer.parseInt(I[4].substring(2),16);
-							Register[r_index] = Register[s1_index] - immediate;
-                                                        jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-						}					
-						else{
-							System.out.println("Error: ilegal source " + I[4] + " !");           				 
-							return -1;
-						}
-					}
-					else if(MIPSsimulator.is_number(I[4])){
-						immediate = Integer.parseInt(I[4]);
-						Register[r_index] = Register[s1_index] - immediate;
-						jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-					}
-				}
-				else{
-					Register[r_index] = Register[s1_index] - Register[s2_index];	
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-
-			case and:
-			case andi:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <and(i)> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + "!\n");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				s2_index = MIPSsimulator.find_reg(I[4]);
-				if(s2_index == -1){					
-					if(!MIPSsimulator.is_number(I[4])){
-						if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
-						                              			&& MIPSsimulator.is_number_hex(I[4].substring(2))){
-							immediate = Integer.parseInt(I[4].substring(2),16);
-							Register[r_index] = Register[s1_index] & immediate;
-							jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-						}					
-						else{
-							System.out.println("Error: ilegal source " + I[4] + " !");           				 
-							return -1;
-						}
-					}
-					else if(MIPSsimulator.is_number(I[4])){
-						immediate = Integer.parseInt(I[4]);
-						Register[r_index] = Register[s1_index] & immediate;
-						jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-					}
-				}
-				else{
-					Register[r_index] = Register[s1_index] & Register[s2_index];		
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);		
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-		
-			case or:
-			case ori:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <or(i)> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				s2_index = MIPSsimulator.find_reg(I[4]);
-				if(s2_index == -1){					
-					if(!MIPSsimulator.is_number(I[4])){
-						if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
-						                              			&& MIPSsimulator.is_number_hex(I[4].substring(2))){
-							immediate = Integer.parseInt(I[4].substring(2),16);
-							Register[r_index] = Register[s1_index] | immediate;
-							jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-						}					
-						else{
-							System.out.println("Error: ilegal source " + I[4] + " !");           				 
-							return -1;
-						}
-					}
-					else if(MIPSsimulator.is_number(I[4])){
-						immediate = Integer.parseInt(I[4]);
-						Register[r_index] = Register[s1_index] | immediate;
-						jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-					}
-				}
-				else{
-					Register[r_index] = Register[s1_index] | Register[s2_index];	
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-
-			case lw:
-				// test number of register
-				if(I[2] == null || I[3] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <lw(i)> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// parse the "k($src)" operator
-				String lwsw_pattern = "\\d+\\(\\$\\.+\\)$";
-				Pattern r = Pattern.compile(lwsw_pattern);
-				Matcher m = r.matcher(I[3]);
-				if(!m.find()){
-					System.out.println("Error: Invalid operator " + I[3] + " !");
-					return -1;
-				}
-				//not finished!!!
-
-
-			case sw:
-
-			case lb:
-
-			case sb:
-
-			case li:
-
-				if (I[4] != null) {
-					System.out.println("Error: ilegal instruction!\n");
-					return -1;
-				}
-				r_index = find_reg(I[2]);	
-				if (r_index == -1) {
-					System.out.println("Error: ilegal register name: " + I[2] + "\n");
-					return -1;
-				}
-						
-				if(!MIPSsimulator.is_number(I[3])){
-					if((I[3].substring(0,2).equals("0x")) || (I[3].substring(0,2).equals("0X")) 
-												&& MIPSsimulator.is_number_hex(I[3].substring(2))){
-						immediate = (int)(char)Integer.parseInt(I[3].substring(2),16);
-						Register[r_index] = immediate;
-					}
-					else{
-						System.out.println("Error: ilegal source: " +I[3] +"\n");
-						return -1;
-					}
-	    			}
-				else {
-					immediate = (int)(char)Integer.parseInt(I[3]);
-					Register[r_index] = immediate;
-				}	
-							
-				return 1;
-	
-			case lui:
-
-				if (I[4] != null) {
-					System.out.println("Error: ilegal instruction!\n");
-					return -1;
-				}
-				r_index = find_reg(I[2]);	
-				if (r_index == -1) {
-					System.out.println("Error: ilegal register name: " + I[2] + "\n");
-					return -1;
-				}
-						
-				if(!MIPSsimulator.is_number(I[3])){
-					if((I[3].substring(0,2).equals("0x")) || (I[3].substring(0,2).equals("0X")) 
-												&& MIPSsimulator.is_number_hex(I[3].substring(2))){
-						immediate = (int)(char)Integer.parseInt(I[3].substring(2),16);
-						Register[r_index] = immediate * 65536;
-					}
-					else{
-						System.out.println("Error: ilegal source: " +I[3] +"\n");
-						return -1;
-					}
-	    			}
-				else {
-					immediate = (int)(char)Integer.parseInt(I[3]);
-					Register[r_index] = immediate * 65536;
-				}	
-							
-				return 1;
-			
-			case la:
-				if(I[2] == null || I[3] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <la> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// Need to add Search Loop for Data Label
-				for(int i = 0; jTable1.getModel().getValueAt(i, 0) != null; i++){
-					if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[3])){
-						find_out = i;
-						break;			
-					}	
-				}
-
-				if(find_out != -1){
-					Register[r_index] = PC_base + 4*find_out;	
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-					
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-					jTable2.selectAll();
-					jTable2.clearSelection();
-
-					return 1;
-				}	
-				else if(find_out == -1){ 
-					System.out.println("Error: cannot find label " + I[3]);
-					return -1;
-				}
-
-			case j:
-				if(I[2] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <j> !");
-					return -1;	           
-				}
-				// Need to add Search Loop for Data Label
-				for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
-					if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[2])){
-						find_out = i;
-						break;			
-					}	
-				}
-
-				if(find_out != -1){
-
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
-
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-					jTable1.selectAll();
-					jTable1.clearSelection();
-
-					PC = PC_base + 4*(find_out - 1);	
-					is_jump = true;
-					return 1;
-				}	
-				else if(find_out == -1){ 
-					System.out.println("Error: cannot find label " + I[2]);
-					return -1;
-				}
-
-			case jr:
-				if(I[2] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <jr> !");
-					return -1;	           
-				} 
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[2]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0; // set the running line to be orange
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
-
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;    
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-				jTable1.selectAll();
-				jTable1.clearSelection();
-
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		
-					ColorTable2[s1_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				if(Register[s1_index] >= PC_base && Register[s1_index] <= PC_base + 4*(number_of_inst - 1)){
-					PC = Register[s1_index] - 4;
-					is_jump = true;
-				}
-				else {
-					System.out.println("Error: The value in register is out of bound for Program Counter !"); 
-					return -1;
-				}
-
-				return 1;
-
-			case beq:
-
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <beq> !");
-					return -1;	           
-				} 
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[2]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				s2_index = MIPSsimulator.find_reg(I[3]);
-				if(s2_index == -1){					
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test and find Label
-				for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
-					if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[4])){
-						find_out = i;
-						break;			
-					}	
-				}
-				if(find_out == -1){ 
-					System.out.println("Error: cannot find label " + I[4]);
-					return -1;
-				}
-				// Do the operation !!!
-				if(Register[s1_index] == Register[s2_index]){
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
-
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-					jTable1.selectAll();
-					jTable1.clearSelection();
-
-					PC = PC_base + 4*(find_out - 1);	
-					is_jump = true;
-
-				}
-				// set register color
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-
-			case bne:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <beq> !");
-					return -1;	           
-				} 
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[2]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				s2_index = MIPSsimulator.find_reg(I[3]);
-				if(s2_index == -1){					
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test and find Label
-				for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
-					if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[4])){
-						find_out = i;
-						break;			
-					}	
-				}
-				if(find_out == -1){ 
-					System.out.println("Error: cannot find label " + I[4]);
-					return -1;
-				}
-				// Do the operation !!!
-				if(Register[s1_index] != Register[s2_index]){
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
-
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-					jTable1.selectAll();
-					jTable1.clearSelection();
-
-					PC = PC_base + 4*(find_out - 1);	
-					is_jump = true;
-
-				}
-				// set register color
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-
-			case jal:
-				if(I[2] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <la> !");
-					return -1;	           
-				} 
-				// Need to add Search Loop for Data Label
-				for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
-					if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[2])){
-						find_out = i;
-						break;			
-					}	
-				}
-
-				if(find_out != -1){
-
-					Register[find_reg("$ra")] = PC + 4;
-					jTable2.getModel().setValueAt(Register[find_reg("$ra")], find_reg("$ra"), 1);
-
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
-
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-					jTable1.selectAll();
-					jTable1.clearSelection();
-
-					PC = PC_base + 4*(find_out - 1);
-
-					ColorTable2[find_reg("$ra")][0] = -1;		
-					ColorTable2[find_reg("$ra")][1] = -1;
-					jTable2.selectAll();
-					jTable2.clearSelection();
-
-					is_jump = true;						
-
-					return 1;
-				}	
-				else if(find_out == -1){ 
-					System.out.println("Error: cannot find label " + I[2]);
-					return -1;
-				}
-
-				return 1;
-			
-			case slt:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <slt> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and execute
-				s2_index = MIPSsimulator.find_reg(I[4]);
-				if(s2_index == -1){					
-					System.out.println("Error: Unknown register " + I[4] + " !");           				 
-					return -1;
-				}
-				
-				if(Register[s1_index] < Register[s2_index]){
-					Register[r_index] = 1;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
-				}
-				else{
-					Register[r_index] = 0;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-
-			case sle:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <sle> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and execute
-				s2_index = MIPSsimulator.find_reg(I[4]);
-				if(s2_index == -1){					
-					System.out.println("Error: Unknown register " + I[4] + " !");           				 
-					return -1;
-				}
-				
-				if(Register[s1_index] <= Register[s2_index]){
-					Register[r_index] = 1;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
-				}
-				else{
-					Register[r_index] = 0;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-
-			case sge:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <sge> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and execute
-				s2_index = MIPSsimulator.find_reg(I[4]);
-				if(s2_index == -1){					
-					System.out.println("Error: Unknown register " + I[4] + " !");           				 
-					return -1;
-				}
-				
-				if(Register[s1_index] >= Register[s2_index]){
-					Register[r_index] = 1;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
-				}
-				else{
-					Register[r_index] = 0;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;  
-	
-			case sgt:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <sgt> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and execute
-				s2_index = MIPSsimulator.find_reg(I[4]);
-				if(s2_index == -1){					
-					System.out.println("Error: Unknown register " + I[4] + " !");           				 
-					return -1;
-				}
-				
-				if(Register[s1_index] > Register[s2_index]){
-					Register[r_index] = 1;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
-				}
-				else{
-					Register[r_index] = 0;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				if(s2_index != -1){
-					ColorTable2[s2_index][0] = -2;		
-					ColorTable2[s2_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-
-				return 1;  
-
-			case sll:
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <or(i)> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				if(!MIPSsimulator.is_number(I[4])){
-					if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
-					                              			&& MIPSsimulator.is_number_hex(I[4].substring(2))){
-						immediate = Integer.parseInt(I[4].substring(2),16);
-						Register[r_index] = Register[s1_index] << immediate;
-						jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-					}					
-					else{
-						System.out.println("Error: ilegal source " + I[4] + " !");           				 
-						return -1;
-					}
-				}
-				else if(MIPSsimulator.is_number(I[4])){
-					immediate = Integer.parseInt(I[4]);
-					Register[r_index] = Register[s1_index] << immediate;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-				}
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;
-
-			case srl:	
-				// test number of register
-				if(I[2] == null || I[3] == null || I[4] == null){
-					System.out.println("Error: Inadequate number of arguements for operation <srl> !");
-					return -1;	           
-				} 
-				// test r
-				r_index = MIPSsimulator.find_reg(I[2]);
-				if(r_index == -1){
-					System.out.println("Error: Unknown register " + I[2] + " !");           				 
-					return -1;
-				}
-				else if(r_index == 0){
-					System.out.println("Error: Can not use $zero as a destination register !");
-					return -1;				
-				}
-				// test s1
-				s1_index = MIPSsimulator.find_reg(I[3]);
-				if(s1_index == -1){
-					System.out.println("Error: Unknown register " + I[3] + " !");           				 
-					return -1;
-				}
-				// test s2 and perform the execution !
-				if(!MIPSsimulator.is_number(I[4])){
-					if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
-					                              			&& MIPSsimulator.is_number_hex(I[4].substring(2))){
-						immediate = Integer.parseInt(I[4].substring(2),16);
-						Register[r_index] = Register[s1_index] >> immediate;
-						jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-					}					
-					else{
-						System.out.println("Error: ilegal source " + I[4] + " !");           				 
-						return -1;
-					}
-				}
-				else if(MIPSsimulator.is_number(I[4])){
-					immediate = Integer.parseInt(I[4]);
-					Register[r_index] = Register[s1_index] >> immediate;
-					jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
-				}	
-
-				if(r_index != -1){
-					ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-					ColorTable2[r_index][1] = -1;
-				}
-				if(s1_index != -1){
-					ColorTable2[s1_index][0] = -2;		 
-					ColorTable2[s1_index][1] = -2;
-				}
-				jTable2.selectAll();
-				jTable2.clearSelection();
-
-				return 1;	
-
-			case syscall:
-				switch(find_reg("$v0")){
-					case 1:
-						
-						return 1;
-					case 4:
-
-						return 1;
-					case 5:
-
-						return 1;
-					case 8:
-
-						return 1;
-					case 10:
-
-						return 1;
-				}
-
-			default:
-				System.out.println("Error: invalid operation " + I[1]);
-				return -1;
-		}
-	}
-//***********************************************************************************1
-	public static int decodeData(String rawline) {
-		String directive = new String();
-		String text = new String();
-		rawline = rawline.trim();
-		String[] pond_split = rawline.split("#");
-		pond_split[0] = pond_split[0].trim();
-		String pattern = "^((\\w+\\s*:\\s*)?\\s*\\.(byte|word)\\s{1,}((((0x|0X)\\w+)|\\d+)(\\s*\\,\\s*|\\s*))*)$|"+"^((\\w+\\s*:\\s*)?\\s*\\.(ascii|asciiz)\\s{1,}\\\".*\\\")$|"+"^((\\w+\\s*:\\s*)?\\s*\\.space\\s{1,}(((0x|0X)\\w+)|\\d+))$";
-		Pattern r = Pattern.compile(pattern);
-		Matcher m = r.matcher(pond_split[0]);
-		if (!m.find()) {
-			return -1;
-		}	
-		String[] quote_split = pond_split[0].split("\"");
-		quote_split[0] = quote_split[0].trim();
-		String[] colon_split = quote_split[0].split(":");
-		
-		if (colon_split.length == 2) {                              // if there is label
-			colon_split[0] = colon_split[0].trim();
-			colon_split[1] = colon_split[1].trim();
-			if (dataPointer >= dataLabel.length) {
-				String[] Temp = dataLabel;
-				dataLabel = new String[dataLabel.length + 100];
-				System.arraycopy(Temp, 0, dataLabel, 0, Temp.length);
-			}
-			dataLabel[dataPointer] = colon_split[0];
-			String[] white_split = colon_split[1].split("\\s+");
-			if ((quote_split.length > 1) && (white_split.length > 1)) {
-				return -1;
-			}
-			white_split[0] = white_split[0].trim();
-			directive = white_split[0];
-		}
-		else if (colon_split.length == 1) {                        // if there is no label
-			colon_split[0] = colon_split[0].trim();
-			String[] white_split = colon_split[0].split("\\s+");
-			if ((quote_split.length > 1) && (white_split.length > 1)) {
-                                return -1;
-                        }
-			white_split[0] = white_split[0].trim();
-			directive = white_split[0];
-		}
-		else {                                                      //error situation
-			return -1;
-		}
-		
-		// start to excute the directive
-		if (directive.equals(".ascii") || directive.equals(".asciiz")) {
-			if (quote_split.length < 2 ) { 
-				return -1;
-			}
-			else if (quote_split.length == 2) {                    
-				text = quote_split[1];
-			}
-			else {
-				for (int i = 2; i < quote_split.length; i++) {
-					quote_split[1] = quote_split[1].concat(quote_split[i]);
-					text = quote_split[1];
-				}
-			}
-			byte[] byteData = text.getBytes();
-			for (int i = 0, index = 0; i < Array.getLength(byteData); i++) {
-				if (i % 4 == 0) {
-					index = i + 3;
-				}
-				if (dataPointer + index >= dataSection.length) {
-					byte[] Temp = dataSection;
-					dataSection = new byte[dataSection.length + 100];
-					System.arraycopy(Temp,0,dataSection,0,Temp.length);	
-				}
-				dataSection[dataPointer + index] = byteData[i];
-				index--;
-			}
-//byteData is only a reference variable pointing to an object, so we don't need to declare the size, and it is not dynamic allocation.
-//Because text is a fixed size array already, and we are not allocating any thing here.
-			//if the directive is .asciiz, add an extra byte into the memory.
-			if (directive.equals(".ascii")) {
-				if ((Array.getLength(byteData) % 4) > 0) {
-					dataPointer = dataPointer + (Array.getLength(byteData) - Array.getLength(byteData) % 4) + 4;
-				}
-				else if((Array.getLength(byteData) % 4) == 0) {
-					dataPointer = dataPointer + Array.getLength(byteData);
-				}
-			}
-			else if (directive.equals(".asciiz")) {
-				if (((Array.getLength(byteData) + 1) % 4) > 0) {
-                                        dataPointer = dataPointer + ((Array.getLength(byteData) + 1) - (Array.getLength(byteData) + 1) % 4) + 4;
-                                }
-                                else if(((Array.getLength(byteData) + 1) % 4) == 0) {
-                                        dataPointer = dataPointer + Array.getLength(byteData) + 1;
-                                }
-                        }
-		}
-		else if (directive.equals(".space")) {
-			String extracted_data = pond_split[0].substring(pond_split[0].indexOf(".space") + 6);
-			extracted_data = extracted_data.trim();	
-			if (is_number(extracted_data)) {
-				dataPointer = dataPointer + Integer.parseInt(extracted_data) * 4;
-			}
-			else if (is_number_hex(extracted_data.substring(2))) {
-				dataPointer = dataPointer + Integer.parseInt(extracted_data.substring(2), 16) * 4;
-			}
-			else {
-				return -1;
-			}
-		}
-		else if (directive.equals(".byte")) {
-			String extracted_data = pond_split[0].substring(pond_split[0].indexOf(".byte") + 5);
-			extracted_data = extracted_data.trim();
-			String[] datas = extracted_data.split("(\\s*\\,\\s*|\\s+)");
-			for (int i = 0, index = 0; i < datas.length; i++) {
-				datas[i] = datas[i].trim();
-				if (is_number(datas[i])) {
-					//parseInt generate a int value, but the value will be stored into a unit of byte within the memory.
-					if (i % 4 == 0)	{
-						index = i + 3;
-					}	
-					if (dataPointer + index >= dataSection.length) {
-						byte[] Temp = dataSection;
-						dataSection = new byte[dataSection.length + 100];
-						System.arraycopy(Temp,0,dataSection,0,Temp.length);	
-					}
-					dataSection[dataPointer + index] = (byte) Integer.parseInt(datas[i]); 
-					index--;
-				}
-				else if (is_number_hex(datas[i].substring(2))) {
-					if (i % 4 == 0) {
-						index = i + 3;
-					}
-					if (dataPointer + index >= dataSection.length) {
-						byte[] Temp = dataSection;
-						dataSection = new byte[dataSection.length + 100];
-						System.arraycopy(Temp,0,dataSection,0,Temp.length);	
-					}
-					dataSection[dataPointer + index] = (byte) Integer.parseInt(datas[i].substring(2), 16);
-					index--;
-				}
-				else {
-					return -1;
-				}
-			}
-			if ((Array.getLength(datas) % 4) > 0) {
-                                dataPointer = dataPointer + (Array.getLength(datas) - Array.getLength(datas) % 4) + 4;
-                        }
-                        else if((Array.getLength(datas) % 4) == 0) {
-                                dataPointer = dataPointer + Array.getLength(datas);
-                        }	
-			
-		}
-		else if (directive.equals(".word")) {
-                        String extracted_data = pond_split[0].substring(pond_split[0].indexOf(".word") + 5);
-                        extracted_data = extracted_data.trim();
-                        String[] datas = extracted_data.split("(\\s*\\,\\s*|\\s+)");
-                        for (int i = 0; i < datas.length; i++) {
-                                datas[i] = datas[i].trim();
-                                if (is_number(datas[i])) {
-                                        //parseInt generate a int value, but the value will be stored into a unit of byte within the memory.
-					byte[] seperated_data = new byte[4];
-					int int_data = Integer.parseInt(datas[i]); 
-                                	seperated_data[0] = (byte) int_data;    
-                                	seperated_data[1] = (byte) (int_data >> 8);
-                               		seperated_data[2] = (byte) (int_data >> 16);
-                               		seperated_data[3] = (byte) (int_data >> 24);
-					
-					if (dataPointer + 10 >= dataSection.length) {
-						byte[] Temp = dataSection;
-						dataSection = new byte[dataSection.length + 100];
-						System.arraycopy(Temp,0,dataSection,0,Temp.length);	
-					}
-					dataSection[dataPointer++] = seperated_data[3];
-					dataSection[dataPointer++] = seperated_data[2];	
-					dataSection[dataPointer++] = seperated_data[1];
-					dataSection[dataPointer++] = seperated_data[0];
-                                }
-                                else if (is_number_hex(datas[i].substring(2))) {
-					byte[] seperated_data = new byte[4];
-					int int_data = Integer.parseInt(datas[i].substring(2), 16);
-					seperated_data[0] = (byte) int_data;
-                                        seperated_data[1] = (byte) (int_data >> 8);
-                                        seperated_data[2] = (byte) (int_data >> 16);
-                                        seperated_data[3] = (byte) (int_data >> 24);
-					
-					if (dataPointer + 10 >= dataSection.length) {
-						byte[] Temp = dataSection;
-						dataSection = new byte[dataSection.length + 100];
-						System.arraycopy(Temp,0,dataSection,0,Temp.length);	
-					}
-                                        dataSection[dataPointer++] = seperated_data[3];
-                                        dataSection[dataPointer++] = seperated_data[2];
-                                        dataSection[dataPointer++] = seperated_data[1];
-                                        dataSection[dataPointer++] = seperated_data[0];
-                                }
-                                else {
-                                        return -1;
-                                }
-                        }
-                }
-
-		return 0;
-	}
-//***********************************************************************************2
-	public static int find_reg(String reg_string){
-		switch(Reg.toReg(reg_string)){
-			case $zero: return 0;
-			case $at: return 1;
-			case $v0: return 2;
-			case $v1: return 3;
-			case $a0: return 4;
-			case $a1: return 5;
-			case $a2: return 6;
-			case $a3: return 7;
-			case $t0: return 8;
-			case $t1: return 9;
-			case $t2: return 10;
-			case $t3: return 11;
-			case $t4: return 12;
-			case $t5: return 13;
-			case $t6: return 14;
-			case $t7: return 15;
-			case $s0: return 16;
-			case $s1: return 17;
-			case $s2: return 18;
-			case $s3: return 19;
-			case $s4: return 20;
-			case $s5: return 21;
-			case $s6: return 22;
-			case $s7: return 23;
-			case $t8: return 24;
-			case $t9: return 25;
-			case $k0: return 26;
-			case $k1: return 27;
-			case $gp: return 28;
-			case $sp: return 29;
-			case $fp: return 30;
-			case $ra: return 31;
-			
-			default: return -1;
-		} 
-	}
-
-	public static boolean is_number(String num) {
-
-		try {
-			Integer.parseInt(num);		
-		} catch(NumberFormatException nfe0) {
-			return false;
-		}
-
-		return true;
-	}
-
-	public static boolean is_number_hex(String num) {
-		try {
-			Integer.parseInt(num, 16);		
-		} catch(NumberFormatException nfe1) {
-			return false;
-		}
-
-		return true;
-	}
-	
-	public static enum Reg{
-
-    		$zero,$at,$v0,$v1,$a0,$a1,$a2,$a3,$t0,$t1,$t2,$t3,$t4,$t5,$t6,$t7,$s0,$s1,$s2,$s3,$s4,$s5,$s6,$s7,$t8,$t9,$k0,$k1,$gp,$sp,$fp,$ra,NOVALUE;
-
-    		public static Reg toReg(String str){
-        		try {
-            			return valueOf(str);
-        		} 
-        		catch (Exception ex){
-            			return NOVALUE;
-        		}
-    		}   
-	}
-	
-	public static enum Op{
-
-		add,sub,and,or,addi,subi,andi,ori,lw,sw,lb,sb,li,lui,la,j,jr,beq,bne,jal,slt,sle,sge,sgt,sll,srl,syscall,NOVALUE;
-
-		public static Op toOp(String str){
-			try {
-				return valueOf(str);			
-			}		
-			catch (Exception ex){
-				return NOVALUE;			
-			}
-		}
-	}
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{                       // Reload !!!!
-	initializeData();
-	is_pause = true;
-	loadFile(myfile);
-	System.out.println("Reload Success");                            
-    }                                        
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{                       // Go !!!!!
-	
-	TimerTask mytask = new TimerTask() {
-		public void run() {
-                        String readSpeed = jSpinner1.getValue().toString();
-        		int speed = Integer.parseInt(readSpeed);                
-			int l = 0;
-			is_pause = false;
-			while(speed > 0 && is_pause == false && MIPSsimulator.Instruction[(PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)][1] != null){
-				for(int i = 0; i < number_of_break; i++){			// detect is any breakpoint is reached!
-					if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == MIPSsimulator.BreakArray[i]){
-						System.out.println("Encounter breakpoint! Remove breakpoint before continuing !");
-						thread_exist = false;
-						return;
-					}
-				}
-
-				if(MIPSsimulator.execute((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == -1){
-
-					if(!is_jump){
-						l = (PC-PC_base == 0) ? 0 : ((PC-PC_base)/4);
-						System.out.println("line " + l);
-						System.out.println("Please fix it before continuing !");	
-		
-						ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -3;           // set the error line to be red
-						ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -3;
-						ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -3;
-
-						jTable1.selectAll();
-						jTable1.clearSelection();
-						thread_exist = false;
-						return;
-					}
-					else{
-						is_jump = false;
-						thread_exist = false;
-						return;
-					}
-				}
-				else{
-					if(!is_jump){
-
-						if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) > 0){
-							ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;
-							// set the previous line to be original color
-							ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
-							ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
-						}
-			
-						ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;		  
-						// set the running line to be orange
-						ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
-						ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-						jTable1.selectAll();
-						jTable1.clearSelection();
-					}
-					else
-						is_jump = false;
-
-					System.out.println("PC: " + PC);
-					PC = PC + 4;
-                                        //delay based on the speed setten by the user
-					try {
-						Thread.sleep(1000*60/speed);
-					} catch (Exception ie) {
-						;
-					}
-				}
-			}	
-			thread_exist = false;
-		}
-	};
-	//Create a new thread to run the delay timertask!! If not do that, the task will be put into event queue that is default to be 
-	//used to handle any actionperforme task, and it will be done by the same thread that runs all swing event such as SetValueAt().
-	//Therefore, all action of SetValueAt() will be blocked by the delay task, and thus new value can not be displayed one by one,
-	//instead, they will be displayed at the same time after the whole while loop is done! 
-	if (thread_exist) {
-	}
-	else {
-		thread_exist = true;
-		new Thread(mytask).start();
-	}  
-    }                                        
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // Pause !!!!                                    
-        is_pause = true;
-    }                                        
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // Step !!!!!
-
-	//is_pause = false;
-                                      
-	for(int i = 0; i < number_of_break; i++){							 // detect if any break point is reached!
-		if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == MIPSsimulator.BreakArray[i]){
-			System.out.println("Encounter breakpoint! Remove breakpoint before continuing !");
-			return;
-		}
-	}
-	
-	int l = 0;
-
-	if(is_pause == true && PC <= breakpoint && MIPSsimulator.Instruction[(PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)][1] != null){
-		
-  						
-		if(MIPSsimulator.execute((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == -1){
-
-			if(!is_jump){
-				l = (PC-PC_base == 0) ? 0 : ((PC-PC_base)/4);
-				System.out.println("line " + l);
-				System.out.println("Please fix it before continuing !");	
-
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -3;           // set the error line to be red
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -3;
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -3;
-				jTable1.selectAll();
-				jTable1.clearSelection();
-			}
-			else
-				is_jump = false;
-		}
-		else{
-			if(!is_jump){
-
-				if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) > 0){
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the previous line to be original color
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
-					ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
-				}
-			
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;		  // set the running line to be orange
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
-				ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-				jTable1.selectAll();
-				jTable1.clearSelection();
-			}
-			else
-				is_jump = false;
-
-			System.out.println("PC: " + PC);
-			PC = PC + 4;
-		}
-	}
-
-    }                                        
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // BreakPoint !!!
-                                        
-	int[] selected_row = jTable1.getSelectedRows();
-
-	int temp_number_of_break = number_of_break;
-
-	for(int i = 0; i < selected_row.length; i++){
-
-		temp_number_of_break = number_of_break;
-
-		for(int j = 0; j <= temp_number_of_break; j++){
-
-System.out.println("BreakArray " + MIPSsimulator.BreakArray[0] + MIPSsimulator.BreakArray[1]+ MIPSsimulator.BreakArray[2]+ MIPSsimulator.BreakArray[3]);
-System.out.println("j: " + j + " number_of_break: " + number_of_break + " temp_number_of_break: " + temp_number_of_break + " selected_row: " + selected_row.length);
-System.out.println(selected_row[i] + "and" + BreakArray[j]);
-
-			if(MIPSsimulator.BreakArray[j] == -1){
-				MIPSsimulator.BreakArray[j] = selected_row[i];
-				number_of_break++;
-
-				ColorTable[selected_row[i]][0] = -2;
-				ColorTable[selected_row[i]][1] = -2;
-				ColorTable[selected_row[i]][2] = -2;
-				jTable1.selectAll();
-				jTable1.clearSelection();
-
-				//System.out.println("TEST in BreakArray == -1");
-				break;
-			}
-			else if(selected_row[i] > MIPSsimulator.BreakArray[j]){
-				//System.out.println("TEST in select > Break");
-				continue;
-			}
-			else if(selected_row[i] < MIPSsimulator.BreakArray[j]){
-				//System.out.println("TEST in select < Break");
-				for(int k = number_of_break; k > j; k--){
-					MIPSsimulator.BreakArray[k] = MIPSsimulator.BreakArray[k - 1];
-				}
-				MIPSsimulator.BreakArray[j] = selected_row[i];
-
-				ColorTable[selected_row[i]][0] = -2;
-				ColorTable[selected_row[i]][1] = -2;
-				ColorTable[selected_row[i]][2] = -2;
-				jTable1.selectAll();
-				jTable1.clearSelection();
-
-				number_of_break++;
-				break;
-			}
-			else if(selected_row[i] == MIPSsimulator.BreakArray[j]){
-				for(int k = j; k < number_of_break - 1; k++){
-					MIPSsimulator.BreakArray[k] = MIPSsimulator.BreakArray[k + 1];
-				}
-				//System.out.println("TEST in select == Break");
-				MIPSsimulator.BreakArray[number_of_break - 1] = -1;
-
-				ColorTable[selected_row[i]][0] = 0;
-				ColorTable[selected_row[i]][1] = 0;
-				ColorTable[selected_row[i]][2] = 0;
-				jTable1.selectAll();
-				jTable1.clearSelection();
-
-				number_of_break--;
-				break;
-			}
-		}
-	}
-    }                                        
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
-
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-}                                        
-
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MIPSsimulator().setVisible(true);
+            else if(MIPSsimulator.is_number(temp[1])){
+              //dataStartAddr = Integer.parseInt(temp[1]);
+              is_text = false;
             }
-        });
+            else{
+              System.out.println("Systax error at line:" + index);
+              System.out.println(rawline);
+              System.out.println(temp[1] + " is not a valid number");
+              System.out.println("Please fix it before continuing !");
+              return -1;
+            }
+          }
+          else{ 
+            System.out.println("Syntax error at line: " + index);
+            System.out.println(rawline);
+            System.out.println("Please fix it before continuing !");
+            return -1;
+          }
+
+        }
+        else if(temp[0].equals(".text")){
+          if(length == 1)
+            is_text = true;
+          else if(length == 2){
+            if((temp[1].substring(0,2).equals("0x") || temp[1].substring(0,2).equals("0X"))
+                && MIPSsimulator.is_number_hex(temp[1].substring(2))){
+              int claim_PC_base = Integer.parseInt(temp[1].substring(2),16);
+              if(claim_PC_base >= 0x00400000 && claim_PC_base <= 0x10008000 && claim_PC_base % 4 == 0){
+                PC_base = Integer.parseInt(temp[1].substring(2),16);
+                PC = PC_base;
+                is_text = true;
+              }
+              else{
+                System.out.println(temp[1] + " is not a valid start address for program counter!");
+                System.out.println("Must be in the range [0x00400000, 0x10008000], and must be multiple of 4");
+                return -1;
+              }
+                }
+            else if(MIPSsimulator.is_number(temp[1])){
+              int claim_PC_base = Integer.parseInt(temp[1]);
+              if(claim_PC_base >= 0x00400000 && claim_PC_base <= 0x10008000 && claim_PC_base % 4 == 0){
+                PC_base = Integer.parseInt(temp[1]);
+                PC = PC_base;
+                is_text = true;
+              }
+              else{
+                System.out.println(temp[1] + " is not a valid start address for program counter!");
+                System.out.println("Must be in the range [0x00400000, 0x10008000], and must be multiple of 4");
+                return -1;
+              }
+
+            }
+            else{
+              System.out.println("Systax error at line:" + index);
+              System.out.println(rawline);
+              System.out.println(temp[1] + " is not a valid number");
+              System.out.println("Please fix it before continuing !");
+              return -1;
+            }
+          }
+          else{ 
+            System.out.println("Syntax error at line: " + index);
+            System.out.println(rawline);
+            System.out.println("Please fix it before continuing !");
+            return -1;
+          }
+        }
+        else if(is_text == false){                // the line should be putted in data section
+          //**********************************************************************************************1
+          int return_value = decodeData(rawline);
+          if (return_value == -1) {
+            System.out.println("Syntax Error at line:"+index_of_line);
+            System.out.println(rawline);
+            System.out.println("Please fix it before continuing !");
+            return -1;
+          }
+          //**********************************************************************************************2
+        }
+        else if(is_text == true){                 
+
+          //**********************************************************************************************1    //Instruction & Table1 grow
+          int rows = jTable1.getRowCount();
+          if (index == rows) {
+            DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+            tableModel.addRow(new Object[]{"","",""});
+          } 
+          if (index >= Instruction.length) {
+            String[][] Temp = Instruction;
+            Instruction = new String[Instruction.length + 100][10];
+            for (int i = 0; i < Temp.length; i++) {
+              Instruction[i] = Temp[i];
+            }
+          }
+          //**********************************************************************************************2
+          MIPSsimulator.parse(rawline, MIPSsimulator.Instruction[index]);
+
+          if(MIPSsimulator.Instruction[index][0] != null){
+            jTable1.getModel().setValueAt(MIPSsimulator.Instruction[index][0], index, 1);
+          }
+          for(index2 = 1; MIPSsimulator.Instruction[index][index2] != null; index2++){
+            text_content = text_content.concat(" ").concat(MIPSsimulator.Instruction[index][index2]);
+          }
+
+          jTable1.getModel().setValueAt(text_content, index, 2);
+          //**********************************************************************************************1    //TextAddress grow
+          if (index >= TextAddress.length) {
+            int[] Temp = TextAddress;
+            TextAddress = new int[TextAddress.length + 100];
+            System.arraycopy(Temp,0,TextAddress,0,Temp.length);	
+          }
+          //**********************************************************************************************2
+          MIPSsimulator.TextAddress[index] = PC_base + 4*index;
+
+          int count = 0;
+          String s = Integer.toString(PC_base + 4*index, 16);
+          if ((count = s.length()) < 8) {
+            for (count = 8 - count; count > 0; count--) {
+              s = "0".concat(s);
+            }
+          }
+          jTable1.getModel().setValueAt("0x".concat(s), index, 0);
+          //jTable1.getModel().setValueAt(Integer.toString(PC_base + 4*index), index, 0);
+          index++;
+        }
+        //**********************************************************************************************1
+        index_of_line++;
+      }					    	
+    }
+    myBufferedReader.close();
+    MIPSsimulator.displayData_16();
+    MIPSsimulator.displayDataLabel();
+    MIPSsimulator.displayDataAddr();
+    //**********************************************************************************************2
+    number_of_inst = index;
+    //**********************************************************************************************1   //BreakArray grow
+    if (number_of_inst >= BreakArray.length) {
+      int[] Temp = BreakArray;
+      BreakArray = new int[number_of_inst];
+      System.arraycopy(Temp,0,BreakArray,0,Temp.length);	
+    }
+    //**********************************************************************************************2
+    for(int i = 0; i < number_of_inst; i++){                                  // Initialize Break Point Table to -1 
+      MIPSsimulator.BreakArray[i] = -1;
+    }
+    //**********************************************************************************************1   //determine ColorTable size 
+    ColorTable = new int[jTable1.getRowCount()][3];
+    ColorTable2 = new int[jTable2.getRowCount()][2];
+    ColorTable3 = new int[jTable3.getRowCount()][3];
+    ColorTable4 = new int[jTable4.getRowCount()][2];
+
+    DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
+
+        JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
+
+        label.setForeground(Color.black);
+
+        /* return value */
+
+        JComponent retComponent = null;
+
+        if(ColorTable[row][col] == -1) {                               // -1 represent the instruction in this cell is now running
+          label.setBackground(new Color(248,255,35));
+          retComponent = label;
+        }
+        else if(ColorTable[row][col] == -2)  {                         // -2 represent its a BreakPoint
+          label.setBackground(new Color(238,155,15));
+          retComponent = label;
+        }
+        else if(ColorTable[row][col] == -3)  {                         // -3 represent its an error line
+          label.setBackground(new Color(255,19,0));
+          retComponent = label;
+        }
+        else if(isSelected)  {
+          label.setBackground(new Color(201,224,246));
+          retComponent = label;
+        }
+        else if(row % 2 == 0){ 
+          label.setBackground(new Color(255,255,255));
+          retComponent = label;
+        }
+        else if(row % 2 == 1){ 
+          label.setBackground(new Color(236,242,248));
+          retComponent = label;
+        }
+
+
+        return retComponent;
+      }
+    };
+
+    DefaultTableCellRenderer renderer2 = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
+
+        JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
+
+        label.setForeground(Color.black);
+
+        /* return value */
+
+        JComponent retComponent = null;
+
+        if(ColorTable2[row][col] == -1) {                               // -1 represent this register's value is changed (destination)
+          label.setBackground(new Color(238,112,123));
+          retComponent = label;
+        }
+        else if(ColorTable2[row][col] == -2)  {                         // -2 represent this register is source register
+          label.setBackground(new Color(149,218,102));
+          retComponent = label;
+        }
+        else if(isSelected)  {
+          label.setBackground(new Color(201,224,246));
+          retComponent = label;
+        }
+        else if(row % 2 == 0){ 
+          label.setBackground(new Color(255,255,255));
+          retComponent = label;
+        }
+        else if(row % 2 == 1){ 
+          label.setBackground(new Color(236,242,248));
+          retComponent = label;
+        }
+
+        return retComponent;
+      }
+    };
+
+    DefaultTableCellRenderer renderer3 = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
+
+        JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
+
+        label.setForeground(Color.black);
+
+        /* return value */
+
+        JComponent retComponent = null;
+
+        if(ColorTable3[row][col] == -1) {                               // -1 represent 
+          label.setBackground(new Color(238,155,15));
+          retComponent = label;
+        }
+        else if(ColorTable3[row][col] == -2)  {
+          label.setBackground(new Color(255,19,0));
+          retComponent = label;
+        }
+        else if(isSelected)  {
+          label.setBackground(new Color(201,224,246));
+          retComponent = label;
+        }
+        else if(row % 2 == 0){ 
+          label.setBackground(new Color(255,255,255));
+          retComponent = label;
+        }
+        else if(row % 2 == 1){ 
+          label.setBackground(new Color(236,242,248));
+          retComponent = label;
+        }
+
+        return retComponent;
+      }
+    };
+
+    DefaultTableCellRenderer renderer4 = new DefaultTableCellRenderer() {           // Set Color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected, boolean hasFocus,int row,int col) {        
+
+        JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected,hasFocus, row, col);
+
+        label.setForeground(Color.black);
+
+        /* return value */
+
+        JComponent retComponent = null;
+
+        if(ColorTable4[row][col] == -1) {                               
+          label.setBackground(new Color(238,112,123));
+          retComponent = label;
+        }
+        else if(ColorTable4[row][col] == -2)  {                         
+          label.setBackground(new Color(149,218,102));
+          retComponent = label;
+        }
+        else if(isSelected)  {
+          label.setBackground(new Color(201,224,246));
+          retComponent = label;
+        }
+        else if(row % 2 == 0){ 
+          label.setBackground(new Color(255,255,255));
+          retComponent = label;
+        }
+        else if(row % 2 == 1){ 
+          label.setBackground(new Color(236,242,248));
+          retComponent = label;
+        }
+
+        return retComponent;
+      }
+    };
+
+    for(int i=0 ; i < jTable1.getColumnCount() ; i++) {
+
+      jTable1.getColumnModel().getColumn(i).setCellRenderer(renderer);
+
     }
 
-    // Variables declaration - do not modify
-    private static javax.swing.JButton jButton1;
-    private static javax.swing.JButton jButton2;
-    private static javax.swing.JButton jButton3;
-    private static javax.swing.JButton jButton4;
-    private static javax.swing.JButton jButton5;
-    private static javax.swing.JButton jButton6;
-    private static javax.swing.JButton jButton7;
-    private static javax.swing.JButton jButton8;
-    private static javax.swing.JButton jButton9;
-    private static javax.swing.JLabel jLabel1;
-    private static javax.swing.JLabel jLabel3;
-    private static javax.swing.JLabel jLabel4;
-    private static javax.swing.JLabel jLabel5;
-    private static javax.swing.JLabel jLabel6;
-    private static javax.swing.JList jList1;
-    private static javax.swing.JScrollPane jScrollPane1;
-    private static javax.swing.JScrollPane jScrollPane2;
-    private static javax.swing.JScrollPane jScrollPane3;
-    private static javax.swing.JScrollPane jScrollPane4;
-    private static javax.swing.JScrollPane jScrollPane5;
-    private static javax.swing.JSpinner jSpinner1;
-    private static javax.swing.JTable jTable1;
-    private static javax.swing.JTable jTable2;
-    private static javax.swing.JTable jTable3;
-    private static javax.swing.JTable jTable4;
-    private static javax.swing.JTextField jTextField1;
-    // End of variables declaration
+    for(int i=0 ; i < jTable2.getColumnCount() ; i++) {
+
+      jTable2.getColumnModel().getColumn(i).setCellRenderer(renderer2);
+
+    }
+
+    for(int i=0 ; i < jTable3.getColumnCount() ; i++) {
+
+      jTable3.getColumnModel().getColumn(i).setCellRenderer(renderer3);
+
+    }
+
+    for(int i=0 ; i < jTable4.getColumnCount() ; i++) {
+
+      jTable4.getColumnModel().getColumn(i).setCellRenderer(renderer4);
+
+    }                                                                         // Set color definition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    jTable1.selectAll();
+    jTable2.selectAll();
+    jTable3.selectAll();
+    jTable4.selectAll();
+    jTable1.clearSelection();
+    jTable2.clearSelection();
+    jTable3.clearSelection();
+    jTable4.clearSelection();
+
+    return 0;
+  }
+
+  private int initializeData() {
+
+    Instruction = new String[1][10];    		// static 2D String array, used to put all Text Instruction
+    TextAddress = new int[1002];                // Address for program text
+    Register = new int[32];                     // Register file
+    number_of_inst = 0;
+    number_of_break = 0;
+    BreakArray = new int[2];
+
+    ColorTable = new int[32][3];             // Color Table
+    ColorTable2 = new int[32][2];
+    ColorTable3 = new int[32][3];
+    ColorTable4 = new int[32][2];
+
+    for(int i = 0; i < jTable1.getRowCount(); i++){
+      jTable1.getModel().setValueAt(null,i,0);
+      jTable1.getModel().setValueAt(null,i,1);
+      jTable1.getModel().setValueAt(null,i,2);
+    }
+
+    for(int i = 0; i < jTable2.getRowCount(); i++){
+      jTable2.getModel().setValueAt(0,i,1);
+    }
+
+    for(int i = 0; i < jTable3.getRowCount(); i++){
+      jTable3.getModel().setValueAt(null,i,0);
+      jTable3.getModel().setValueAt(null,i,1);
+      jTable3.getModel().setValueAt(null,i,2);
+    }
+
+    for(int i = 0; i < jTable4.getRowCount(); i++){
+      jTable4.getModel().setValueAt(null,i,0);
+      jTable4.getModel().setValueAt(null,i,1);
+    }
+
+    dataSection = new byte[2];                    // for data section's contents (unit of memory is byte)
+    dataLabel = new String[2];
+    dataPointer = 0;
+    PC_base = 0x00400000;                         // default PC based address        
+    PC = PC_base;                                 // Program counter
+
+    dataStartAddr = 0x10008000;                   // start address for Static Data
+    SP = 0x7ffffffc;                              // Static Pointer
+
+    is_pause = false;                         // test is the PAUSE button is pressed
+    is_jump = false;
+    thread_exist = false;
+    breakpoint = PC_base + 4*9599;
+
+    return 0;
+  }
+
+  private int jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{  
+
+    jSpinner1.setValue((int) 60);                        	 		  // set the initialized speed 				     
+    int returnVal = opener.showOpenDialog(frame);
+
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+      myfile = opener.getSelectedFile();
+
+      try {
+        initializeData();
+        int ret = loadFile(myfile);                                 // Put the original codes into LoadFile (above) method!
+        if(ret == -1)
+          System.out.println("Load file fail!");
+        else if(ret == 0)
+          System.out.println("Load file success!");
+      } 
+      catch (Exception ex){
+        return -1;
+      }
+    }
+    return 0;
+  }
+
+  //**********************************************************************************************1                             
+  public static void displayData_10() {
+    for (int i = 0; i < dataPointer/4; i++) {
+      int byte4 = (dataSection[4*i] << 24) 
+        + ((dataSection[4*i+1] & 0xFF) << 16) 
+        + ((dataSection[4*i+2] & 0xFF) << 8) 
+        + (dataSection[4*i+3] & 0xFF);
+      int rows = jTable3.getRowCount();
+      if (i == rows) {
+        DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
+        tableModel.addRow(new Object[]{"","",""});
+      } 
+      jTable3.getModel().setValueAt(Integer.toString(byte4, 10), i, 2);
+    }
+  }
+  public static void displayData_16() {
+    for (int i = 0; i < dataPointer/4; i++) {
+      int byte4 = (dataSection[4*i] << 24) 
+        + ((dataSection[4*i+1] & 0xFF) << 16) 
+        + ((dataSection[4*i+2] & 0xFF) << 8) 
+        + (dataSection[4*i+3] & 0xFF);
+      int rows = jTable3.getRowCount();
+      if (i == rows) {
+        DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
+        tableModel.addRow(new Object[]{"","",""}); 
+      }
+      int count = 0;
+      String s = Integer.toString(byte4, 16);
+      if ((count = s.length()) < 8) {
+        for (count = 8 - count; count > 0; count--) {
+          s = "0".concat(s);
+        }
+      }
+      jTable3.getModel().setValueAt("0x".concat(s), i, 2);
+    }
+  }
+  public static void displayDataLabel() {
+    if (dataPointer >= dataLabel.length) {
+      String[] Temp = dataLabel;
+      dataLabel = new String[dataPointer];
+      System.arraycopy(Temp,0,dataLabel,0,Temp.length);
+    }
+    for (int i = 0; i < dataPointer/4; i++) {
+      if (dataLabel[4*i] != null) {
+        jTable3.getModel().setValueAt(dataLabel[4*i], i, 1);
+      }
+    }
+  }
+  public static void displayDataAddr() {
+    for (int i = 0; i < dataPointer/4; i++) {
+      int count = 0;
+      String s = Integer.toString(dataStartAddr-i*4, 16).toUpperCase();
+      if ((count = s.length()) < 8) {
+        for (count = 8 - count; count > 0; count--) {
+          s = "0".concat(s);
+        }
+      }
+      jTable3.getModel().setValueAt("0x".concat(s), i, 0);
+    }
+  }
+
+  //**********************************************************************************************2     
+  public static int parse(String rawline, String[] inst_fragment){        // Input the rawline, output -1 : error, output 0 : correct
+
+    rawline = rawline.trim();
+    String[] coma_result = rawline.split(":");
+
+    if(coma_result.length>1){
+      inst_fragment[0] = coma_result[0].trim();               // inst_fragment[0] is LABEL, if no label, put "null" 
+      rawline = coma_result[1];
+    }
+    else{
+      inst_fragment[0] = null;			
+    }
+
+    rawline = rawline.trim();
+    String[] common_result = rawline.split("#");
+    if(common_result.length > 1){
+      rawline = common_result[0];
+    }
+
+    String[] inst_result = rawline.split("\\s+");
+    String[] temp;
+
+    int k = 1;
+    for(int i=0; i<inst_result.length; i++){
+      temp = inst_result[i].split(",");
+
+      if(temp.length > 1){
+        for(int j=0; j<temp.length;j++){
+          inst_fragment[k++] = temp[j];
+        }
+      }
+      else if(temp.length == 1){
+        inst_fragment[k++] = temp[0];
+      }
+    }
+
+    return 0;
+
+  }
+
+  public static int execute(int index){                      // Input is the index of "Instruction" and "Address"
+
+    String[] I = Instruction[index];
+    int r_index, s1_index, s2_index, immediate;
+    int find_out = -1;		
+
+    if(I[1] == null)                                   // There is no instruction in this element
+      return -1;                                 // Send -1 to let main function stop
+
+    for(int i = 0; i < number_of_inst; i++){  	      // set the previous instruction line to be original color
+      if(ColorTable[i][2] != -2 && ColorTable[i][2] != -3){
+        ColorTable[i][0] = 0;	 
+        ColorTable[i][1] = 0;
+        ColorTable[i][2] = 0;
+      }
+    }
+    jTable1.selectAll();
+    jTable1.clearSelection();
+
+    for(int i = 0; i < 32; i++){			      // Set all cells in Register table to be original color
+      ColorTable2[i][0] = 0;			 
+      ColorTable2[i][1] = 0;
+    }
+    jTable2.selectAll();
+    jTable2.clearSelection();
+
+    switch(Op.toOp(I[1])){
+
+      case addi:
+      case add: 
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <add(i)> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        s2_index = MIPSsimulator.find_reg(I[4]);
+
+        if(s2_index == -1){	
+
+          if(!MIPSsimulator.is_number(I[4])){
+
+            if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
+                && MIPSsimulator.is_number_hex(I[4].substring(2))){
+
+              immediate = Integer.parseInt(I[4].substring(2),16);
+              Register[r_index] = Register[s1_index] + immediate;
+              jTable2.getModel().setValueAt(Register[r_index], r_index, 1); // set value in Reg Table
+                }					
+            else{
+              System.out.println("Error: ilegal source " + I[4] + " !");           				 
+              return -1;
+            }
+          }
+          else if(MIPSsimulator.is_number(I[4])){
+
+            immediate = Integer.parseInt(I[4]);
+
+            Register[r_index] = Register[s1_index] + immediate;
+
+            jTable2.getModel().setValueAt(Register[r_index], r_index, 1);         // set value in Reg Table
+          }
+        }
+        else{
+          Register[r_index] = Register[s1_index] + Register[s2_index];
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);                 // set value in Reg Table 
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case sub:
+      case subi:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <sub(i)> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + "!\n");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        s2_index = MIPSsimulator.find_reg(I[4]);
+        if(s2_index == -1){					
+          if(!MIPSsimulator.is_number(I[4])){
+            if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
+                && MIPSsimulator.is_number_hex(I[4].substring(2))){
+              immediate = Integer.parseInt(I[4].substring(2),16);
+              Register[r_index] = Register[s1_index] - immediate;
+              jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+                }					
+            else{
+              System.out.println("Error: ilegal source " + I[4] + " !");           				 
+              return -1;
+            }
+          }
+          else if(MIPSsimulator.is_number(I[4])){
+            immediate = Integer.parseInt(I[4]);
+            Register[r_index] = Register[s1_index] - immediate;
+            jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+          }
+        }
+        else{
+          Register[r_index] = Register[s1_index] - Register[s2_index];	
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case and:
+      case andi:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <and(i)> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + "!\n");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        s2_index = MIPSsimulator.find_reg(I[4]);
+        if(s2_index == -1){					
+          if(!MIPSsimulator.is_number(I[4])){
+            if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
+                && MIPSsimulator.is_number_hex(I[4].substring(2))){
+              immediate = Integer.parseInt(I[4].substring(2),16);
+              Register[r_index] = Register[s1_index] & immediate;
+              jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+                }					
+            else{
+              System.out.println("Error: ilegal source " + I[4] + " !");           				 
+              return -1;
+            }
+          }
+          else if(MIPSsimulator.is_number(I[4])){
+            immediate = Integer.parseInt(I[4]);
+            Register[r_index] = Register[s1_index] & immediate;
+            jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+          }
+        }
+        else{
+          Register[r_index] = Register[s1_index] & Register[s2_index];		
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);		
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case or:
+      case ori:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <or(i)> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        s2_index = MIPSsimulator.find_reg(I[4]);
+        if(s2_index == -1){					
+          if(!MIPSsimulator.is_number(I[4])){
+            if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
+                && MIPSsimulator.is_number_hex(I[4].substring(2))){
+              immediate = Integer.parseInt(I[4].substring(2),16);
+              Register[r_index] = Register[s1_index] | immediate;
+              jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+                }					
+            else{
+              System.out.println("Error: ilegal source " + I[4] + " !");           				 
+              return -1;
+            }
+          }
+          else if(MIPSsimulator.is_number(I[4])){
+            immediate = Integer.parseInt(I[4]);
+            Register[r_index] = Register[s1_index] | immediate;
+            jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+          }
+        }
+        else{
+          Register[r_index] = Register[s1_index] | Register[s2_index];	
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case lw:
+        // test number of register
+        if(I[2] == null || I[3] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <lw(i)> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // parse the "k($src)" operator
+        String lwsw_pattern = "\\d+\\(\\$\\.+\\)$";
+        Pattern r = Pattern.compile(lwsw_pattern);
+        Matcher m = r.matcher(I[3]);
+        if(!m.find()){
+          System.out.println("Error: Invalid operator " + I[3] + " !");
+          return -1;
+        }
+        //not finished!!!
+
+
+      case sw:
+
+      case lb:
+
+      case sb:
+
+      case li:
+
+        if (I[4] != null) {
+          System.out.println("Error: ilegal instruction!\n");
+          return -1;
+        }
+        r_index = find_reg(I[2]);	
+        if (r_index == -1) {
+          System.out.println("Error: ilegal register name: " + I[2] + "\n");
+          return -1;
+        }
+
+        if(!MIPSsimulator.is_number(I[3])){
+          if((I[3].substring(0,2).equals("0x")) || (I[3].substring(0,2).equals("0X")) 
+              && MIPSsimulator.is_number_hex(I[3].substring(2))){
+            immediate = (int)(char)Integer.parseInt(I[3].substring(2),16);
+            Register[r_index] = immediate;
+              }
+          else{
+            System.out.println("Error: ilegal source: " +I[3] +"\n");
+            return -1;
+          }
+        }
+        else {
+          immediate = (int)(char)Integer.parseInt(I[3]);
+          Register[r_index] = immediate;
+        }	
+
+        return 1;
+
+      case lui:
+
+        if (I[4] != null) {
+          System.out.println("Error: ilegal instruction!\n");
+          return -1;
+        }
+        r_index = find_reg(I[2]);	
+        if (r_index == -1) {
+          System.out.println("Error: ilegal register name: " + I[2] + "\n");
+          return -1;
+        }
+
+        if(!MIPSsimulator.is_number(I[3])){
+          if((I[3].substring(0,2).equals("0x")) || (I[3].substring(0,2).equals("0X")) 
+              && MIPSsimulator.is_number_hex(I[3].substring(2))){
+            immediate = (int)(char)Integer.parseInt(I[3].substring(2),16);
+            Register[r_index] = immediate * 65536;
+              }
+          else{
+            System.out.println("Error: ilegal source: " +I[3] +"\n");
+            return -1;
+          }
+        }
+        else {
+          immediate = (int)(char)Integer.parseInt(I[3]);
+          Register[r_index] = immediate * 65536;
+        }	
+
+        return 1;
+
+      case la:
+        if(I[2] == null || I[3] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <la> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // Need to add Search Loop for Data Label
+        for(int i = 0; jTable1.getModel().getValueAt(i, 0) != null; i++){
+          if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[3])){
+            find_out = i;
+            break;			
+          }	
+        }
+
+        if(find_out != -1){
+          Register[r_index] = PC_base + 4*find_out;	
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+          jTable2.selectAll();
+          jTable2.clearSelection();
+
+          return 1;
+        }	
+        else if(find_out == -1){ 
+          System.out.println("Error: cannot find label " + I[3]);
+          return -1;
+        }
+
+      case j:
+        if(I[2] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <j> !");
+          return -1;	           
+        }
+        // Need to add Search Loop for Data Label
+        for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
+          if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[2])){
+            find_out = i;
+            break;			
+          }	
+        }
+
+        if(find_out != -1){
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+
+          PC = PC_base + 4*(find_out - 1);	
+          is_jump = true;
+          return 1;
+        }	
+        else if(find_out == -1){ 
+          System.out.println("Error: cannot find label " + I[2]);
+          return -1;
+        }
+
+      case jr:
+        if(I[2] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <jr> !");
+          return -1;	           
+        } 
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[2]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+
+        ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0; // set the running line to be orange
+        ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
+        ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
+
+        ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;    
+        ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
+        ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
+        jTable1.selectAll();
+        jTable1.clearSelection();
+
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		
+          ColorTable2[s1_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        if(Register[s1_index] >= PC_base && Register[s1_index] <= PC_base + 4*(number_of_inst - 1)){
+          PC = Register[s1_index] - 4;
+          is_jump = true;
+        }
+        else {
+          System.out.println("Error: The value in register is out of bound for Program Counter !"); 
+          return -1;
+        }
+
+        return 1;
+
+      case beq:
+
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <beq> !");
+          return -1;	           
+        } 
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[2]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        s2_index = MIPSsimulator.find_reg(I[3]);
+        if(s2_index == -1){					
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test and find Label
+        for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
+          if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[4])){
+            find_out = i;
+            break;			
+          }	
+        }
+        if(find_out == -1){ 
+          System.out.println("Error: cannot find label " + I[4]);
+          return -1;
+        }
+        // Do the operation !!!
+        if(Register[s1_index] == Register[s2_index]){
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+
+          PC = PC_base + 4*(find_out - 1);	
+          is_jump = true;
+
+        }
+        // set register color
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case bne:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <beq> !");
+          return -1;	           
+        } 
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[2]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        s2_index = MIPSsimulator.find_reg(I[3]);
+        if(s2_index == -1){					
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test and find Label
+        for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
+          if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[4])){
+            find_out = i;
+            break;			
+          }	
+        }
+        if(find_out == -1){ 
+          System.out.println("Error: cannot find label " + I[4]);
+          return -1;
+        }
+        // Do the operation !!!
+        if(Register[s1_index] != Register[s2_index]){
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+
+          PC = PC_base + 4*(find_out - 1);	
+          is_jump = true;
+
+        }
+        // set register color
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case jal:
+        if(I[2] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <la> !");
+          return -1;	           
+        } 
+        // Need to add Search Loop for Data Label
+        for(int i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
+          if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(I[2])){
+            find_out = i;
+            break;			
+          }	
+        }
+
+        if(find_out != -1){
+
+          Register[find_reg("$ra")] = PC + 4;
+          jTable2.getModel().setValueAt(Register[find_reg("$ra")], find_reg("$ra"), 1);
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the running line to be orange
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+
+          PC = PC_base + 4*(find_out - 1);
+
+          ColorTable2[find_reg("$ra")][0] = -1;		
+          ColorTable2[find_reg("$ra")][1] = -1;
+          jTable2.selectAll();
+          jTable2.clearSelection();
+
+          is_jump = true;						
+
+          return 1;
+        }	
+        else if(find_out == -1){ 
+          System.out.println("Error: cannot find label " + I[2]);
+          return -1;
+        }
+
+        return 1;
+
+      case slt:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <slt> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and execute
+        s2_index = MIPSsimulator.find_reg(I[4]);
+        if(s2_index == -1){					
+          System.out.println("Error: Unknown register " + I[4] + " !");           				 
+          return -1;
+        }
+
+        if(Register[s1_index] < Register[s2_index]){
+          Register[r_index] = 1;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
+        }
+        else{
+          Register[r_index] = 0;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case sle:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <sle> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and execute
+        s2_index = MIPSsimulator.find_reg(I[4]);
+        if(s2_index == -1){					
+          System.out.println("Error: Unknown register " + I[4] + " !");           				 
+          return -1;
+        }
+
+        if(Register[s1_index] <= Register[s2_index]){
+          Register[r_index] = 1;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
+        }
+        else{
+          Register[r_index] = 0;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case sge:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <sge> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and execute
+        s2_index = MIPSsimulator.find_reg(I[4]);
+        if(s2_index == -1){					
+          System.out.println("Error: Unknown register " + I[4] + " !");           				 
+          return -1;
+        }
+
+        if(Register[s1_index] >= Register[s2_index]){
+          Register[r_index] = 1;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
+        }
+        else{
+          Register[r_index] = 0;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;  
+
+      case sgt:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <sgt> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and execute
+        s2_index = MIPSsimulator.find_reg(I[4]);
+        if(s2_index == -1){					
+          System.out.println("Error: Unknown register " + I[4] + " !");           				 
+          return -1;
+        }
+
+        if(Register[s1_index] > Register[s2_index]){
+          Register[r_index] = 1;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);			
+        }
+        else{
+          Register[r_index] = 0;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);	
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        if(s2_index != -1){
+          ColorTable2[s2_index][0] = -2;		
+          ColorTable2[s2_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+
+        return 1;  
+
+      case sll:
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <or(i)> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        if(!MIPSsimulator.is_number(I[4])){
+          if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
+              && MIPSsimulator.is_number_hex(I[4].substring(2))){
+            immediate = Integer.parseInt(I[4].substring(2),16);
+            Register[r_index] = Register[s1_index] << immediate;
+            jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+              }					
+          else{
+            System.out.println("Error: ilegal source " + I[4] + " !");           				 
+            return -1;
+          }
+        }
+        else if(MIPSsimulator.is_number(I[4])){
+          immediate = Integer.parseInt(I[4]);
+          Register[r_index] = Register[s1_index] << immediate;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+        }
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;
+
+      case srl:	
+        // test number of register
+        if(I[2] == null || I[3] == null || I[4] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <srl> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(I[3]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + I[3] + " !");           				 
+          return -1;
+        }
+        // test s2 and perform the execution !
+        if(!MIPSsimulator.is_number(I[4])){
+          if((I[4].substring(0,2).equals("0x") || I[4].substring(0,2).equals("0X"))
+              && MIPSsimulator.is_number_hex(I[4].substring(2))){
+            immediate = Integer.parseInt(I[4].substring(2),16);
+            Register[r_index] = Register[s1_index] >> immediate;
+            jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+              }					
+          else{
+            System.out.println("Error: ilegal source " + I[4] + " !");           				 
+            return -1;
+          }
+        }
+        else if(MIPSsimulator.is_number(I[4])){
+          immediate = Integer.parseInt(I[4]);
+          Register[r_index] = Register[s1_index] >> immediate;
+          jTable2.getModel().setValueAt(Register[r_index], r_index, 1);
+        }	
+
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
+        }
+        if(s1_index != -1){
+          ColorTable2[s1_index][0] = -2;		 
+          ColorTable2[s1_index][1] = -2;
+        }
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;	
+
+      case syscall:
+        switch(find_reg("$v0")){
+          case 1:
+
+            return 1;
+          case 4:
+
+            return 1;
+          case 5:
+
+            return 1;
+          case 8:
+
+            return 1;
+          case 10:
+
+            return 1;
+        }
+
+      default:
+        System.out.println("Error: invalid operation " + I[1]);
+        return -1;
+    }
+  }
+  //***********************************************************************************1
+  public static int decodeData(String rawline) {
+    String directive = new String();
+    String text = new String();
+    rawline = rawline.trim();
+    String[] pond_split = rawline.split("#");
+    pond_split[0] = pond_split[0].trim();
+    String pattern = "^((\\w+\\s*:\\s*)?\\s*\\.(byte|word)\\s{1,}((((0x|0X)\\w+)|\\d+)(\\s*\\,\\s*|\\s*))*)$|"+"^((\\w+\\s*:\\s*)?\\s*\\.(ascii|asciiz)\\s{1,}\\\".*\\\")$|"+"^((\\w+\\s*:\\s*)?\\s*\\.space\\s{1,}(((0x|0X)\\w+)|\\d+))$";
+    Pattern r = Pattern.compile(pattern);
+    Matcher m = r.matcher(pond_split[0]);
+    if (!m.find()) {
+      return -1;
+    }	
+    String[] quote_split = pond_split[0].split("\"");
+    quote_split[0] = quote_split[0].trim();
+    String[] colon_split = quote_split[0].split(":");
+
+    if (colon_split.length == 2) {                              // if there is label
+      colon_split[0] = colon_split[0].trim();
+      colon_split[1] = colon_split[1].trim();
+      if (dataPointer >= dataLabel.length) {
+        String[] Temp = dataLabel;
+        dataLabel = new String[dataLabel.length + 100];
+        System.arraycopy(Temp, 0, dataLabel, 0, Temp.length);
+      }
+      dataLabel[dataPointer] = colon_split[0];
+      String[] white_split = colon_split[1].split("\\s+");
+      if ((quote_split.length > 1) && (white_split.length > 1)) {
+        return -1;
+      }
+      white_split[0] = white_split[0].trim();
+      directive = white_split[0];
+    }
+    else if (colon_split.length == 1) {                        // if there is no label
+      colon_split[0] = colon_split[0].trim();
+      String[] white_split = colon_split[0].split("\\s+");
+      if ((quote_split.length > 1) && (white_split.length > 1)) {
+        return -1;
+      }
+      white_split[0] = white_split[0].trim();
+      directive = white_split[0];
+    }
+    else {                                                      //error situation
+      return -1;
+    }
+
+    // start to excute the directive
+    if (directive.equals(".ascii") || directive.equals(".asciiz")) {
+      if (quote_split.length < 2 ) { 
+        return -1;
+      }
+      else if (quote_split.length == 2) {                    
+        text = quote_split[1];
+      }
+      else {
+        for (int i = 2; i < quote_split.length; i++) {
+          quote_split[1] = quote_split[1].concat(quote_split[i]);
+          text = quote_split[1];
+        }
+      }
+      byte[] byteData = text.getBytes();
+      for (int i = 0, index = 0; i < Array.getLength(byteData); i++) {
+        if (i % 4 == 0) {
+          index = i + 3;
+        }
+        if (dataPointer + index >= dataSection.length) {
+          byte[] Temp = dataSection;
+          dataSection = new byte[dataSection.length + 100];
+          System.arraycopy(Temp,0,dataSection,0,Temp.length);	
+        }
+        dataSection[dataPointer + index] = byteData[i];
+        index--;
+      }
+      //byteData is only a reference variable pointing to an object, so we don't need to declare the size, and it is not dynamic allocation.
+      //Because text is a fixed size array already, and we are not allocating any thing here.
+      //if the directive is .asciiz, add an extra byte into the memory.
+      if (directive.equals(".ascii")) {
+        if ((Array.getLength(byteData) % 4) > 0) {
+          dataPointer = dataPointer + (Array.getLength(byteData) - Array.getLength(byteData) % 4) + 4;
+        }
+        else if((Array.getLength(byteData) % 4) == 0) {
+          dataPointer = dataPointer + Array.getLength(byteData);
+        }
+      }
+      else if (directive.equals(".asciiz")) {
+        if (((Array.getLength(byteData) + 1) % 4) > 0) {
+          dataPointer = dataPointer + ((Array.getLength(byteData) + 1) - (Array.getLength(byteData) + 1) % 4) + 4;
+        }
+        else if(((Array.getLength(byteData) + 1) % 4) == 0) {
+          dataPointer = dataPointer + Array.getLength(byteData) + 1;
+        }
+      }
+    }
+    else if (directive.equals(".space")) {
+      String extracted_data = pond_split[0].substring(pond_split[0].indexOf(".space") + 6);
+      extracted_data = extracted_data.trim();	
+      if (is_number(extracted_data)) {
+        dataPointer = dataPointer + Integer.parseInt(extracted_data) * 4;
+      }
+      else if (is_number_hex(extracted_data.substring(2))) {
+        dataPointer = dataPointer + Integer.parseInt(extracted_data.substring(2), 16) * 4;
+      }
+      else {
+        return -1;
+      }
+    }
+    else if (directive.equals(".byte")) {
+      String extracted_data = pond_split[0].substring(pond_split[0].indexOf(".byte") + 5);
+      extracted_data = extracted_data.trim();
+      String[] datas = extracted_data.split("(\\s*\\,\\s*|\\s+)");
+      for (int i = 0, index = 0; i < datas.length; i++) {
+        datas[i] = datas[i].trim();
+        if (is_number(datas[i])) {
+          //parseInt generate a int value, but the value will be stored into a unit of byte within the memory.
+          if (i % 4 == 0)	{
+            index = i + 3;
+          }	
+          if (dataPointer + index >= dataSection.length) {
+            byte[] Temp = dataSection;
+            dataSection = new byte[dataSection.length + 100];
+            System.arraycopy(Temp,0,dataSection,0,Temp.length);	
+          }
+          dataSection[dataPointer + index] = (byte) Integer.parseInt(datas[i]); 
+          index--;
+        }
+        else if (is_number_hex(datas[i].substring(2))) {
+          if (i % 4 == 0) {
+            index = i + 3;
+          }
+          if (dataPointer + index >= dataSection.length) {
+            byte[] Temp = dataSection;
+            dataSection = new byte[dataSection.length + 100];
+            System.arraycopy(Temp,0,dataSection,0,Temp.length);	
+          }
+          dataSection[dataPointer + index] = (byte) Integer.parseInt(datas[i].substring(2), 16);
+          index--;
+        }
+        else {
+          return -1;
+        }
+      }
+      if ((Array.getLength(datas) % 4) > 0) {
+        dataPointer = dataPointer + (Array.getLength(datas) - Array.getLength(datas) % 4) + 4;
+      }
+      else if((Array.getLength(datas) % 4) == 0) {
+        dataPointer = dataPointer + Array.getLength(datas);
+      }	
+
+    }
+    else if (directive.equals(".word")) {
+      String extracted_data = pond_split[0].substring(pond_split[0].indexOf(".word") + 5);
+      extracted_data = extracted_data.trim();
+      String[] datas = extracted_data.split("(\\s*\\,\\s*|\\s+)");
+      for (int i = 0; i < datas.length; i++) {
+        datas[i] = datas[i].trim();
+        if (is_number(datas[i])) {
+          //parseInt generate a int value, but the value will be stored into a unit of byte within the memory.
+          byte[] seperated_data = new byte[4];
+          int int_data = Integer.parseInt(datas[i]); 
+          seperated_data[0] = (byte) int_data;    
+          seperated_data[1] = (byte) (int_data >> 8);
+          seperated_data[2] = (byte) (int_data >> 16);
+          seperated_data[3] = (byte) (int_data >> 24);
+
+          if (dataPointer + 10 >= dataSection.length) {
+            byte[] Temp = dataSection;
+            dataSection = new byte[dataSection.length + 100];
+            System.arraycopy(Temp,0,dataSection,0,Temp.length);	
+          }
+          dataSection[dataPointer++] = seperated_data[3];
+          dataSection[dataPointer++] = seperated_data[2];	
+          dataSection[dataPointer++] = seperated_data[1];
+          dataSection[dataPointer++] = seperated_data[0];
+        }
+        else if (is_number_hex(datas[i].substring(2))) {
+          byte[] seperated_data = new byte[4];
+          int int_data = Integer.parseInt(datas[i].substring(2), 16);
+          seperated_data[0] = (byte) int_data;
+          seperated_data[1] = (byte) (int_data >> 8);
+          seperated_data[2] = (byte) (int_data >> 16);
+          seperated_data[3] = (byte) (int_data >> 24);
+
+          if (dataPointer + 10 >= dataSection.length) {
+            byte[] Temp = dataSection;
+            dataSection = new byte[dataSection.length + 100];
+            System.arraycopy(Temp,0,dataSection,0,Temp.length);	
+          }
+          dataSection[dataPointer++] = seperated_data[3];
+          dataSection[dataPointer++] = seperated_data[2];
+          dataSection[dataPointer++] = seperated_data[1];
+          dataSection[dataPointer++] = seperated_data[0];
+        }
+        else {
+          return -1;
+        }
+      }
+    }
+
+    return 0;
+  }
+  //***********************************************************************************2
+  public static int find_reg(String reg_string){
+    switch(Reg.toReg(reg_string)){
+      case $zero: return 0;
+      case $at: return 1;
+      case $v0: return 2;
+      case $v1: return 3;
+      case $a0: return 4;
+      case $a1: return 5;
+      case $a2: return 6;
+      case $a3: return 7;
+      case $t0: return 8;
+      case $t1: return 9;
+      case $t2: return 10;
+      case $t3: return 11;
+      case $t4: return 12;
+      case $t5: return 13;
+      case $t6: return 14;
+      case $t7: return 15;
+      case $s0: return 16;
+      case $s1: return 17;
+      case $s2: return 18;
+      case $s3: return 19;
+      case $s4: return 20;
+      case $s5: return 21;
+      case $s6: return 22;
+      case $s7: return 23;
+      case $t8: return 24;
+      case $t9: return 25;
+      case $k0: return 26;
+      case $k1: return 27;
+      case $gp: return 28;
+      case $sp: return 29;
+      case $fp: return 30;
+      case $ra: return 31;
+
+      default: return -1;
+    } 
+  }
+
+  public static boolean is_number(String num) {
+
+    try {
+      Integer.parseInt(num);		
+    } catch(NumberFormatException nfe0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public static boolean is_number_hex(String num) {
+    try {
+      Integer.parseInt(num, 16);		
+    } catch(NumberFormatException nfe1) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public static enum Reg{
+
+    $zero,$at,$v0,$v1,$a0,$a1,$a2,$a3,$t0,$t1,$t2,$t3,$t4,$t5,$t6,$t7,$s0,$s1,$s2,$s3,$s4,$s5,$s6,$s7,$t8,$t9,$k0,$k1,$gp,$sp,$fp,$ra,NOVALUE;
+
+    public static Reg toReg(String str){
+      try {
+        return valueOf(str);
+      } 
+      catch (Exception ex){
+        return NOVALUE;
+      }
+    }   
+  }
+
+  public static enum Op{
+
+    add,sub,and,or,addi,subi,andi,ori,lw,sw,lb,sb,li,lui,la,j,jr,beq,bne,jal,slt,sle,sge,sgt,sll,srl,syscall,NOVALUE;
+
+    public static Op toOp(String str){
+      try {
+        return valueOf(str);			
+      }		
+      catch (Exception ex){
+        return NOVALUE;			
+      }
+    }
+  }
+
+  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{                       // Reload !!!!
+    initializeData();
+    is_pause = true;
+    loadFile(myfile);
+    System.out.println("Reload Success");                            
+  }                                        
+
+  private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{                       // Go !!!!!
+
+    TimerTask mytask = new TimerTask() {
+      public void run() {
+        String readSpeed = jSpinner1.getValue().toString();
+        int speed = Integer.parseInt(readSpeed);                
+        int l = 0;
+        is_pause = false;
+        while(speed > 0 && is_pause == false && MIPSsimulator.Instruction[(PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)][1] != null){
+          for(int i = 0; i < number_of_break; i++){			// detect is any breakpoint is reached!
+            if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == MIPSsimulator.BreakArray[i]){
+              System.out.println("Encounter breakpoint! Remove breakpoint before continuing !");
+              thread_exist = false;
+              return;
+            }
+          }
+
+          if(MIPSsimulator.execute((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == -1){
+
+            if(!is_jump){
+              l = (PC-PC_base == 0) ? 0 : ((PC-PC_base)/4);
+              System.out.println("line " + l);
+              System.out.println("Please fix it before continuing !");	
+
+              ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -3;           // set the error line to be red
+              ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -3;
+              ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -3;
+
+              jTable1.selectAll();
+              jTable1.clearSelection();
+              thread_exist = false;
+              return;
+            }
+            else{
+              is_jump = false;
+              thread_exist = false;
+              return;
+            }
+          }
+          else{
+            if(!is_jump){
+
+              if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) > 0){
+                ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;
+                // set the previous line to be original color
+                ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
+                ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
+              }
+
+              ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;		  
+              // set the running line to be orange
+              ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
+              ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
+              jTable1.selectAll();
+              jTable1.clearSelection();
+            }
+            else
+              is_jump = false;
+
+            System.out.println("PC: " + PC);
+            PC = PC + 4;
+            //delay based on the speed setten by the user
+            try {
+              Thread.sleep(1000*60/speed);
+            } catch (Exception ie) {
+              ;
+            }
+          }
+        }	
+        thread_exist = false;
+      }
+    };
+    //Create a new thread to run the delay timertask!! If not do that, the task will be put into event queue that is default to be 
+    //used to handle any actionperforme task, and it will be done by the same thread that runs all swing event such as SetValueAt().
+    //Therefore, all action of SetValueAt() will be blocked by the delay task, and thus new value can not be displayed one by one,
+    //instead, they will be displayed at the same time after the whole while loop is done! 
+    if (thread_exist) {
+    }
+    else {
+      thread_exist = true;
+      new Thread(mytask).start();
+    }  
+  }                                        
+
+  private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // Pause !!!!                                    
+    is_pause = true;
+  }                                        
+
+  private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // Step !!!!!
+
+    //is_pause = false;
+
+    for(int i = 0; i < number_of_break; i++){							 // detect if any break point is reached!
+      if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == MIPSsimulator.BreakArray[i]){
+        System.out.println("Encounter breakpoint! Remove breakpoint before continuing !");
+        return;
+      }
+    }
+
+    int l = 0;
+
+    if(is_pause == true && PC <= breakpoint && MIPSsimulator.Instruction[(PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)][1] != null){
+
+
+      if(MIPSsimulator.execute((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == -1){
+
+        if(!is_jump){
+          l = (PC-PC_base == 0) ? 0 : ((PC-PC_base)/4);
+          System.out.println("line " + l);
+          System.out.println("Please fix it before continuing !");	
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -3;           // set the error line to be red
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -3;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -3;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+        }
+        else
+          is_jump = false;
+      }
+      else{
+        if(!is_jump){
+
+          if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) > 0){
+            ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][0] = 0;// set the previous line to be original color
+            ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][1] = 0;
+            ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) - 1][2] = 0;
+          }
+
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;		  // set the running line to be orange
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
+          ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+        }
+        else
+          is_jump = false;
+
+        System.out.println("PC: " + PC);
+        PC = PC + 4;
+      }
+    }
+
+  }                                        
+
+  private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // BreakPoint !!!
+
+    int[] selected_row = jTable1.getSelectedRows();
+
+    int temp_number_of_break = number_of_break;
+
+    for(int i = 0; i < selected_row.length; i++){
+
+      temp_number_of_break = number_of_break;
+
+      for(int j = 0; j <= temp_number_of_break; j++){
+
+        System.out.println("BreakArray " + MIPSsimulator.BreakArray[0] + MIPSsimulator.BreakArray[1]+ MIPSsimulator.BreakArray[2]+ MIPSsimulator.BreakArray[3]);
+        System.out.println("j: " + j + " number_of_break: " + number_of_break + " temp_number_of_break: " + temp_number_of_break + " selected_row: " + selected_row.length);
+        System.out.println(selected_row[i] + "and" + BreakArray[j]);
+
+        if(MIPSsimulator.BreakArray[j] == -1){
+          MIPSsimulator.BreakArray[j] = selected_row[i];
+          number_of_break++;
+
+          ColorTable[selected_row[i]][0] = -2;
+          ColorTable[selected_row[i]][1] = -2;
+          ColorTable[selected_row[i]][2] = -2;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+
+          //System.out.println("TEST in BreakArray == -1");
+          break;
+        }
+        else if(selected_row[i] > MIPSsimulator.BreakArray[j]){
+          //System.out.println("TEST in select > Break");
+          continue;
+        }
+        else if(selected_row[i] < MIPSsimulator.BreakArray[j]){
+          //System.out.println("TEST in select < Break");
+          for(int k = number_of_break; k > j; k--){
+            MIPSsimulator.BreakArray[k] = MIPSsimulator.BreakArray[k - 1];
+          }
+          MIPSsimulator.BreakArray[j] = selected_row[i];
+
+          ColorTable[selected_row[i]][0] = -2;
+          ColorTable[selected_row[i]][1] = -2;
+          ColorTable[selected_row[i]][2] = -2;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+
+          number_of_break++;
+          break;
+        }
+        else if(selected_row[i] == MIPSsimulator.BreakArray[j]){
+          for(int k = j; k < number_of_break - 1; k++){
+            MIPSsimulator.BreakArray[k] = MIPSsimulator.BreakArray[k + 1];
+          }
+          //System.out.println("TEST in select == Break");
+          MIPSsimulator.BreakArray[number_of_break - 1] = -1;
+
+          ColorTable[selected_row[i]][0] = 0;
+          ColorTable[selected_row[i]][1] = 0;
+          ColorTable[selected_row[i]][2] = 0;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+
+          number_of_break--;
+          break;
+        }
+      }
+    }
+  }                                        
+
+  private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    // TODO add your handling code here:
+  }                                        
+
+  private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    // TODO add your handling code here:
+  }                                        
+
+  private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    // TODO add your handling code here:
+  }                                        
+
+  //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+  /**
+   * @param args the command line arguments
+   */
+  public static void main(String args[]) {
+    java.awt.EventQueue.invokeLater(new Runnable() {
+      public void run() {
+        new MIPSsimulator().setVisible(true);
+      }
+    });
+  }
+
+  // Variables declaration - do not modify
+  private static javax.swing.JButton jButton1;
+  private static javax.swing.JButton jButton2;
+  private static javax.swing.JButton jButton3;
+  private static javax.swing.JButton jButton4;
+  private static javax.swing.JButton jButton5;
+  private static javax.swing.JButton jButton6;
+  private static javax.swing.JButton jButton7;
+  private static javax.swing.JButton jButton8;
+  private static javax.swing.JButton jButton9;
+  private static javax.swing.JLabel jLabel1;
+  private static javax.swing.JLabel jLabel3;
+  private static javax.swing.JLabel jLabel4;
+  private static javax.swing.JLabel jLabel5;
+  private static javax.swing.JLabel jLabel6;
+  private static javax.swing.JList jList1;
+  private static javax.swing.JScrollPane jScrollPane1;
+  private static javax.swing.JScrollPane jScrollPane2;
+  private static javax.swing.JScrollPane jScrollPane3;
+  private static javax.swing.JScrollPane jScrollPane4;
+  private static javax.swing.JScrollPane jScrollPane5;
+  private static javax.swing.JSpinner jSpinner1;
+  private static javax.swing.JTable jTable1;
+  private static javax.swing.JTable jTable2;
+  private static javax.swing.JTable jTable3;
+  private static javax.swing.JTable jTable4;
+  private static javax.swing.JTextField jTextField1;
+  // End of variables declaration
 
 }
 
