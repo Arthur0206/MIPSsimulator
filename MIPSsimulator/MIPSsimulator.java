@@ -62,7 +62,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
   public static int PC_base = 0x00400000;                         // default PC based address        
   public static int PC = PC_base;                                 // Program counter
 
-  public static int dataStartAddr = 0x10000000;			// start address for Static Data
+  public static int dataStartAddr = 0x10008000;	  		// start address for Static Data
 
   public static int SP = 0x7ffffffc;                              // Static Pointer
 
@@ -664,11 +664,11 @@ public class MIPSsimulator extends javax.swing.JFrame {
           else if(length == 2){
             if((temp[1].substring(0,2).equals("0x") || temp[1].substring(0,2).equals("0X")) &&     
                 MIPSsimulator.is_number_hex(temp[1].substring(2))){
-              dataStartAddr = Integer.parseInt(temp[1].substring(2),16);
+              //dataStartAddr = Integer.parseInt(temp[1].substring(2),16);
               is_text = false;
                 }
             else if(MIPSsimulator.is_number(temp[1])){
-              dataStartAddr = Integer.parseInt(temp[1]);
+              //dataStartAddr = Integer.parseInt(temp[1]);
               is_text = false;
             }
             else{
@@ -1039,7 +1039,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
     PC_base = 0x00400000;                         // default PC based address        
     PC = PC_base;                                 // Program counter
 
-    dataStartAddr = 0x10000000;                   // start address for Static Data
+    dataStartAddr = 0x10008000;                   // start address for Static Data
     SP = 0x7ffffffc;                              // Static Pointer
 
     is_pause = false;                         // test is the PAUSE button is pressed
@@ -1116,7 +1116,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
   }
   public static void displayDataAddr() {
     for (int i = 0; i < dataPointer/4; i++) {
-      jTable3.getModel().setValueAt("0x".concat(Integer.toString(dataStartAddr+i*4, 16)), i, 0);
+      jTable3.getModel().setValueAt("0x".concat(Integer.toString(dataStartAddr-i*4, 16)), i, 0);
     }
   }
 
