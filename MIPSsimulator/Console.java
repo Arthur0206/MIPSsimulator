@@ -1,6 +1,3 @@
-//test
-
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -16,7 +13,7 @@ public class Console extends JPanel implements ActionListener {
     textField = new JTextField(30);
     textField.addActionListener(this);
 
-    textArea = new JTextArea(10,30);
+    textArea = new JTextArea(30,50);
     textArea.setEditable(false);
     JScrollPane scrollPane = new JScrollPane(textArea);
 
