@@ -13,6 +13,7 @@
  *
  * @author sosoman
  */
+import java.awt.event.*;
 import java.lang.*;
 import java.lang.reflect.*;
 import java.util.regex.*;
@@ -27,12 +28,18 @@ import java.awt.Dimension;
 public class MIPSsimulator extends javax.swing.JFrame {
 
   //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  static JTextField textField;
+  static JTextArea textArea;
+  static JPanel console;
+  static JFrame consoleFrame;
+  static JScrollPane scrollPane;
   static JFrame frame = new JFrame();
   static JFileChooser opener = new JFileChooser();
   static JFileChooser saver = new JFileChooser();
   static File myfile;
   static File logfile;
 
+  public static boolean visible= true;
   public static String[][] Instruction = new String[1][10];    // static 2D String array, used to put all Text Instruction
   public static int[] TextAddress = new int[1002];                // Address for program text
   public static int[] Register = new int[32];                     // Register file
@@ -55,7 +62,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
   public static int PC_base = 0x00400000;                         // default PC based address        
   public static int PC = PC_base;                                 // Program counter
 
-  public static int dataStartAddr = 0x10008000;			// start address for Static Data
+  public static int dataStartAddr = 0x10008000;	  		// start address for Static Data
 
   public static int SP = 0x7ffffffc;                              // Static Pointer
 
@@ -222,7 +229,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
       jButton7.setBackground(new java.awt.Color(76, 105, 193));
       jButton7.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
       jButton7.setForeground(new java.awt.Color(255, 255, 255));
-      jButton7.setText("Save Log");
+      jButton7.setText("Console");
       jButton7.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
       jButton7.setIconTextGap(6);
       jButton7.setOpaque(true);
@@ -772,15 +779,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
           }
           //**********************************************************************************************2
           MIPSsimulator.TextAddress[index] = PC_base + 4*index;
-
-          int count = 0;
-          String s = Integer.toString(PC_base + 4*index, 16);
-          if ((count = s.length()) < 8) {
-            for (count = 8 - count; count > 0; count--) {
-              s = "0".concat(s);
-            }
-          }
-          jTable1.getModel().setValueAt("0x".concat(s), index, 0);
+          jTable1.getModel().setValueAt("0x".concat(Integer.toString(PC_base + 4*index, 16)), index, 0);
           //jTable1.getModel().setValueAt(Integer.toString(PC_base + 4*index), index, 0);
           index++;
         }
@@ -1100,14 +1099,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
         DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
         tableModel.addRow(new Object[]{"","",""}); 
       }
-      int count = 0;
-      String s = Integer.toString(byte4, 16);
-      if ((count = s.length()) < 8) {
-        for (count = 8 - count; count > 0; count--) {
-          s = "0".concat(s);
-        }
-      }
-      jTable3.getModel().setValueAt("0x".concat(s), i, 2);
+      jTable3.getModel().setValueAt("0x".concat(Integer.toString(byte4, 16)), i, 2);
     }
   }
   public static void displayDataLabel() {
@@ -1124,14 +1116,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
   }
   public static void displayDataAddr() {
     for (int i = 0; i < dataPointer/4; i++) {
-      int count = 0;
-      String s = Integer.toString(dataStartAddr-i*4, 16).toUpperCase();
-      if ((count = s.length()) < 8) {
-        for (count = 8 - count; count > 0; count--) {
-          s = "0".concat(s);
-        }
-      }
-      jTable3.getModel().setValueAt("0x".concat(s), i, 0);
+      jTable3.getModel().setValueAt("0x".concat(Integer.toString(dataStartAddr-i*4, 16)), i, 0);
     }
   }
 
@@ -2578,7 +2563,14 @@ public class MIPSsimulator extends javax.swing.JFrame {
       thread_exist = true;
       new Thread(mytask).start();
     }  
-  }                                        
+  }                     
+
+  private void textFieldActionPerformed(java.awt.event.ActionEvent evt) throws Exception{              // input field of Console!
+    String text = textField.getText();
+    textArea.append(text);
+    textField.selectAll();
+    textArea.setCaretPosition(textArea.getDocument().getLength());
+  }
 
   private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // Pause !!!!                                    
     is_pause = true;
@@ -2710,19 +2702,55 @@ public class MIPSsimulator extends javax.swing.JFrame {
     }
   }                                        
 
-  private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    // TODO add your handling code here:
+  private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         //console open/close
+    visible = !visible;
+    consoleFrame.setVisible(visible); 
   }                                        
+
+  private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    // TODO add your handling code here:
+  }
 
   private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {                                         
     // TODO add your handling code here:
   }                                        
 
-  private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    // TODO add your handling code here:
-  }                                        
-
   //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+  private void createConsole() {
+    consoleFrame = new JFrame("Console");
+    //consoleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    console = new JPanel(new GridBagLayout());
+    textField = new JTextField(30); 
+
+    textField.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        try{
+          textFieldActionPerformed(evt);
+        } catch (Exception whatever){
+          ;
+        }
+      }
+    });
+
+    textArea = new JTextArea(30,50);
+    textArea.setEditable(false);
+    scrollPane = new JScrollPane(textArea);
+
+    GridBagConstraints c = new GridBagConstraints();
+    c.gridwidth = GridBagConstraints.REMAINDER;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    console.add(textField, c);
+
+    c.fill = GridBagConstraints.BOTH;
+    c.weightx = 1.0;
+    c.weighty = 1.0;
+    console.add(scrollPane, c);
+
+    consoleFrame.add(console);
+    consoleFrame.pack();
+    consoleFrame.setVisible(visible);
+  }
 
   /**
    * @param args the command line arguments
@@ -2730,7 +2758,9 @@ public class MIPSsimulator extends javax.swing.JFrame {
   public static void main(String args[]) {
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new MIPSsimulator().setVisible(true);
+        MIPSsimulator myMIPSsimulator = new MIPSsimulator();
+        myMIPSsimulator.createConsole();
+        myMIPSsimulator.setVisible(true);
       }
     });
   }
