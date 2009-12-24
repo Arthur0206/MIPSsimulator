@@ -1,0 +1,59 @@
+*cat file.c -- print the content of the file
+*cat file.c | grep "this" -- pipe the stdout of "cat file.c" into the stdin of "grep "this"" (search "this" in file.c)
+*cat file.c | grep "this" | grep "are"
+*scp lcc001@ieng9.ucsd.edu:/home/solaris/ieng9/cs120f/lcc001/pa4/pa4b.c . -- login the serve ieng9.ucsd.edu server using user name lcc001, and download pa4b.c to current directory(".")  
+*scp -r ...... -- if download a forder, use -r (recursive download the file in the directory tree)
+*rm -Rf -- remove file or directory enforcely. (R means recursive)
+*wget http://www.a-web-site.com/games/cardgame.exe . -- download a file to current directory (http://must be included since it's the protocal)
+*A=3 -- set a envirement variable A equal to 3
+*export A=3 -- set a envirement variable A equal to 3 also valid in sub processes
+*$A -- see the value of the envirement variable A
+*$ + Tab + Tab -- see all the envirement variable in the envirement
+*set config file under ~/.ssh/ :
+1. build a file named "config" under ~/.ssh
+2. 
+Host ucsd
+User lcc001
+Port 22
+HostName ieng9.ucsd.edu
+3. ssh-copy-id idname
+4. every time connecting to ssh lcc001@ieng9.ucsd.edu, just type ssh ucsd
+
+*chat on the server -- write idname,  wall
+
+*git show v0.03:story.txt > test.t -- transfer stdout of "git show v0.03:story.txt into file test.t
+*echo hello -- let the screen print out "hello"
+*echo hello ./test.txt -- print "hello" into test.txt
+*git clone sosoman@sosoman.kicks-ass.org:/home/sosoman/GITMIPSsimulator
+*telnet sosoman.kicks-ass.org 22
+*record macro:
+(1) qa (a can be any name)
+(2) do some thing (some thing you want to record)
+(3) esc 
+(4) q (let vim know the ending)
+(5) @a (call the macro)
+
+*mark:
+(1) ma (a can be any name)
+(2) 'a (jump to the mark a)
+
+*vimdiff a.txt b.txt -- compare two file; 
+Ctrl + W  ->  j,l,h,k (switch between files)
+
+*:split -- open a file twice in the same terminal
+Ctrl + W -> j,k 
+
+*vim a.txt b.txt (open two files in the smae terminal)
+:n (switch to next file)
+:prev (switch to previous file)
+
+*gg=G (rearrange a file from the start(gg) to the end(G))
+
+*set syntax=cpp (highlight keyword by c++ syntax form)
+
+
+
+
+
+
+
