@@ -39,6 +39,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
   static File myfile;
   static File logfile;
 
+  public static boolean visible= true;
   public static String[][] Instruction = new String[1][10];    // static 2D String array, used to put all Text Instruction
   public static int[] TextAddress = new int[1002];                // Address for program text
   public static int[] Register = new int[32];                     // Register file
@@ -75,7 +76,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
   /** Creates new form MIPSsimulator */
   public MIPSsimulator() {
     initComponents();
-    createConsole();
   }
 
   /** This method is called from within the constructor to
@@ -229,7 +229,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
       jButton7.setBackground(new java.awt.Color(76, 105, 193));
       jButton7.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
       jButton7.setForeground(new java.awt.Color(255, 255, 255));
-      jButton7.setText("Save Log");
+      jButton7.setText("Console");
       jButton7.setBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("textHighlight"), 3, true));
       jButton7.setIconTextGap(6);
       jButton7.setOpaque(true);
@@ -2702,22 +2702,23 @@ public class MIPSsimulator extends javax.swing.JFrame {
     }
   }                                        
 
-  private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    // TODO add your handling code here:
+  private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         //console open/close
+    visible = !visible;
+    consoleFrame.setVisible(visible); 
   }                                        
+
+  private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    // TODO add your handling code here:
+  }
 
   private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    // TODO add your handling code here:
-  }                                        
-
-  private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
     // TODO add your handling code here:
   }                                        
 
   //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
   private void createConsole() {
     consoleFrame = new JFrame("Console");
-    consoleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //consoleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     console = new JPanel(new GridBagLayout());
     textField = new JTextField(30); 
@@ -2748,7 +2749,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
 
     consoleFrame.add(console);
     consoleFrame.pack();
-    consoleFrame.setVisible(true);
+    consoleFrame.setVisible(visible);
   }
 
   /**
@@ -2757,7 +2758,9 @@ public class MIPSsimulator extends javax.swing.JFrame {
   public static void main(String args[]) {
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new MIPSsimulator().setVisible(true);
+        MIPSsimulator myMIPSsimulator = new MIPSsimulator();
+        myMIPSsimulator.createConsole();
+        myMIPSsimulator.setVisible(true);
       }
     });
   }
