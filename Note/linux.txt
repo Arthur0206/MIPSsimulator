@@ -51,7 +51,8 @@ Ctrl + W -> j,k
 
 *set syntax=cpp (highlight keyword by c++ syntax form)
 
-
+*git clone git@github.com:sosoman/twilight.git
+*git clone git@github.com:s810011/Sosoman.git
 
 
 
