@@ -1077,7 +1077,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
     dataStartAddr = 0x10008000;                   // start address for Static Data
     SP = 0x7ffffffc;                              // Static Pointer
 
-    is_pause = false;                         // test is the PAUSE button is pressed
+    //is_pause = false;                         // test is the PAUSE button is pressed
     is_jump = false;
     thread_exist = false;
     breakpoint = PC_base + 4*9599;
@@ -2264,9 +2264,12 @@ public class MIPSsimulator extends javax.swing.JFrame {
     rawline = rawline.trim();
     String[] pond_split = rawline.split("#");
     pond_split[0] = pond_split[0].trim();
-    String pattern = "^((\\w+\\s*:\\s*)?\\s*\\.(byte|word)\\s{1,}((((0x|0X)([a-e|A-E]|\\d){0,8})|-?+\\d+)(\\s*\\,\\s*|\\s*))*)$|"
+    String pattern = "^((\\w+\\s*:\\s*)?\\s*\\.(byte|word)\\s{1,}(((-?+(0x|0X)([a-e|A-E]|\\d){0,8})|-?+\\d+)(\\s*\\,\\s*|\\s*))*)$|"
       +"^((\\w+\\s*:\\s*)?\\s*\\.(ascii|asciiz)\\s{1,}\\\".*\\\")$|"
-      +"^((\\w+\\s*:\\s*)?\\s*\\.space\\s{1,}(((0x|0X)\\([a-e|A-E]|\\d){0,8})|\\d+))$";
+      +"^((\\w+\\s*:\\s*)?\\s*\\.space\\s{1,}(((0x|0X)([a-e|A-E]|\\d){0,8})|\\d+))$";
+  //String pattern = "^((\\w+\\s*:\\s*)?\\s*\\.(byte|word)\\s{1,}((((0x|0X)\\w+)|\\d+)(\\s*\\,\\s*|\\s*))*)$|"
+  //  +"^((\\w+\\s*:\\s*)?\\s*\\.(ascii|asciiz)\\s{1,}\\\".*\\\")$|"
+  //  +"^((\\w+\\s*:\\s*)?\\s*\\.space\\s{1,}(((0x|0X)\\w+)|\\d+))$";
     Pattern r = Pattern.compile(pattern);
     Matcher m = r.matcher(pond_split[0]);
     if (!m.find()) {
@@ -2283,6 +2286,12 @@ public class MIPSsimulator extends javax.swing.JFrame {
         String[] Temp = dataLabel;
         dataLabel = new String[dataLabel.length + 100];
         System.arraycopy(Temp, 0, dataLabel, 0, Temp.length);
+      }
+      for (int j = 0; j < dataLabel.length; j++) {
+        if (colon_split[0].equals(dataLabel[j])) {
+          System.out.println("label repeated!");
+          return -1;
+        }
       }
       dataLabel[dataPointer] = colon_split[0];
       String[] white_split = colon_split[1].split("\\s+");
@@ -2355,11 +2364,24 @@ public class MIPSsimulator extends javax.swing.JFrame {
     else if (directive.equals(".space")) {
       String extracted_data = pond_split[0].substring(pond_split[0].indexOf(".space") + 6);
       extracted_data = extracted_data.trim();	
+
       if (is_number(extracted_data)) {
-        dataPointer = dataPointer + Integer.parseInt(extracted_data) * 4;
+        int index = Integer.parseInt(extracted_data) * 4;
+        if (dataPointer + index >= dataSection.length) {
+          byte[] Temp = dataSection;
+          dataSection = new byte[dataSection.length + 100];
+          System.arraycopy(Temp,0,dataSection,0,Temp.length);
+        }
+        dataPointer = dataPointer + index;
       }
       else if (is_number_hex(extracted_data.substring(2))) {
-        dataPointer = dataPointer + Integer.parseInt(extracted_data.substring(2), 16) * 4;
+        int index = Integer.parseInt(extracted_data.substring(2), 16) * 4;
+        if (dataPointer + index >= dataSection.length) {
+          byte[] Temp = dataSection;
+          dataSection = new byte[dataSection.length + 100];
+          System.arraycopy(Temp,0,dataSection,0,Temp.length);
+        }
+        dataPointer = dataPointer + index;
       }
       else {
         return -1;
