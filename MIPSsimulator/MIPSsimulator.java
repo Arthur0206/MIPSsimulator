@@ -2264,9 +2264,9 @@ public class MIPSsimulator extends javax.swing.JFrame {
     rawline = rawline.trim();
     String[] pond_split = rawline.split("#");
     pond_split[0] = pond_split[0].trim();
-    String pattern = "^((\\w+\\s*:\\s*)?\\s*\\.(byte|word)\\s{1,}((((0x|0X)\\w+)|\\d+)(\\s*\\,\\s*|\\s*))*)$|"
+    String pattern = "^((\\w+\\s*:\\s*)?\\s*\\.(byte|word)\\s{1,}((((0x|0X)([a-e|A-E]|\\d){0,8})|-?+\\d+)(\\s*\\,\\s*|\\s*))*)$|"
       +"^((\\w+\\s*:\\s*)?\\s*\\.(ascii|asciiz)\\s{1,}\\\".*\\\")$|"
-      +"^((\\w+\\s*:\\s*)?\\s*\\.space\\s{1,}(((0x|0X)\\w+)|\\d+))$";
+      +"^((\\w+\\s*:\\s*)?\\s*\\.space\\s{1,}(((0x|0X)\\([a-e|A-E]|\\d){0,8})|\\d+))$";
     Pattern r = Pattern.compile(pattern);
     Matcher m = r.matcher(pond_split[0]);
     if (!m.find()) {
