@@ -53,8 +53,8 @@ public class MIPSsimulator extends javax.swing.JFrame {
   public static int[][] ColorTable3;
   public static int[][] ColorTable4;
 
-  public static byte[] dataSection = new byte[2]; 		// for data section's contents (unit of memory is byte)
-  public static String[] dataLabel = new String[2]; 
+  public static byte[] dataSection = new byte[1000]; 		// for data section's contents (unit of memory is byte)
+  public static String[] dataLabel = new String[250]; 
   public static int dataPointer = 0;
   public static char[] stackFormat;
   public static char[] dataFormat;
@@ -62,8 +62,11 @@ public class MIPSsimulator extends javax.swing.JFrame {
 
   public static int PC_base = 0x00400000;                         // default PC based address        
   public static int PC = PC_base;                                 // Program counter
+  
   public static int dataStartAddr = 0x10008000;			// start address for Static Data
   public static int SP = 0x7ffffffc;                              // Static Pointer
+
+
   public static boolean is_pause = true;                         // test is the PAUSE button is pressed
   public static boolean is_jump = false;
   public static boolean thread_exist = false; 
@@ -429,7 +432,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
           return canEdit [columnIndex];
         }
       });
-
+      for(int i = 0; i < 8160; i++){
+        DefaultTableModel tableModel = (DefaultTableModel) jTable3.getModel();
+        tableModel.addRow(new Object[]{"","",""}); 
+      }
       jTable3.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
       jTable3.setColumnSelectionAllowed(true);
       jTable3.setGridColor(new java.awt.Color(38, 79, 117));
@@ -490,6 +496,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         }
       });
 
+      for(int i = 0; i < 10000; i++){
+        DefaultTableModel tableModel = (DefaultTableModel) jTable4.getModel();
+        tableModel.addRow(new Object[]{"","",""}); 
+      }
       jTable4.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
       jTable4.setColumnSelectionAllowed(true);
       jTable4.setGridColor(new java.awt.Color(38, 79, 117));
@@ -522,7 +532,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
       jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
       jTextField1.setFont(new java.awt.Font("DejaVu Sans", 1, 18));
-      jTextField1.setText("jTextField1");
+      jTextField1.setText("");
 
       jButton9.setBackground(new java.awt.Color(76, 105, 193));
       jButton9.setFont(new java.awt.Font("DejaVu Sans", 1, 17));
@@ -533,7 +543,11 @@ public class MIPSsimulator extends javax.swing.JFrame {
       jButton9.setOpaque(true);
       jButton9.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
+          try{
           jButton9ActionPerformed(evt);
+          }catch (Exception whatever){
+            ;
+          }
         }
       });
 
@@ -657,6 +671,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(temp[0].equals(".data")){
           if(length == 1)
             is_text = false;
+          /*
           else if(length == 2){
             if((temp[1].substring(0,2).equals("0x") || temp[1].substring(0,2).equals("0X")) &&     
                 MIPSsimulator.is_number_hex(temp[1].substring(2))){
@@ -675,6 +690,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
               return -1;
             }
           }
+          */
           else{ 
             System.out.println("Syntax error at line: " + index);
             System.out.println(rawline);
@@ -686,6 +702,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
         else if(temp[0].equals(".text")){
           if(length == 1)
             is_text = true;
+          /*
           else if(length == 2){
             if((temp[1].substring(0,2).equals("0x") || temp[1].substring(0,2).equals("0X"))
                 && MIPSsimulator.is_number_hex(temp[1].substring(2))){
@@ -723,6 +740,8 @@ public class MIPSsimulator extends javax.swing.JFrame {
               return -1;
             }
           }
+
+          */
           else{ 
             System.out.println("Syntax error at line: " + index);
             System.out.println(rawline);
@@ -785,10 +804,13 @@ public class MIPSsimulator extends javax.swing.JFrame {
       }					    	
     }
     myBufferedReader.close();
+
     MIPSsimulator.displayData_10();
     MIPSsimulator.displayDataLabel();
     MIPSsimulator.displayDataAddr();
+
     number_of_inst = index;
+
     if (number_of_inst >= BreakArray.length) {                                 //BreakArray grow
       int[] Temp = BreakArray;
       BreakArray = new int[number_of_inst];
@@ -825,6 +847,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         }
         else if(ColorTable[row][col] == -3)  {                         // -3 represent its an error line
           label.setBackground(new Color(255,19,0));
+          retComponent = label;
+        }
+        else if(ColorTable[row][col] == -4) {
+          label.setBackground(new Color(221,96,241));
           retComponent = label;
         }
         else if(isSelected)  {
@@ -866,6 +892,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
           label.setBackground(new Color(149,218,102));
           retComponent = label;
         }
+        else if(ColorTable2[row][col] == -3) {
+          label.setBackground(new Color(221,96,241));
+          retComponent = label;
+        }
         else if(isSelected)  {
           label.setBackground(new Color(201,224,246));
           retComponent = label;
@@ -897,11 +927,15 @@ public class MIPSsimulator extends javax.swing.JFrame {
         JComponent retComponent = null;
 
         if(ColorTable3[row][col] == -1) {                               // -1 represent 
-          label.setBackground(new Color(238,155,15));
+          label.setBackground(new Color(238,112,123));
           retComponent = label;
         }
         else if(ColorTable3[row][col] == -2)  {
-          label.setBackground(new Color(255,19,0));
+          label.setBackground(new Color(149,218,102));
+          retComponent = label;
+        }
+        else if(ColorTable3[row][col] == -3) {
+          label.setBackground(new Color(221,96,241));
           retComponent = label;
         }
         else if(isSelected)  {
@@ -940,6 +974,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         }
         else if(ColorTable4[row][col] == -2)  {                         
           label.setBackground(new Color(149,218,102));
+          retComponent = label;
+        }
+        else if(ColorTable4[row][col] == -3) {
+          label.setBackground(new Color(221,96,241));
           retComponent = label;
         }
         else if(isSelected)  {
@@ -1030,6 +1068,11 @@ public class MIPSsimulator extends javax.swing.JFrame {
     for (int i = 0; i < l; i++) {
       dataFormat[i] = 'd';
     }
+
+    scrollToCenter(jTable1, 0, 0);
+    scrollToCenter(jTable3, 0, 0);
+    scrollToCenter(jTable4, 0, 0);
+
     return 0;
   }
 
@@ -1056,6 +1099,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
     for(int i = 0; i < jTable2.getRowCount(); i++){
       jTable2.getModel().setValueAt(Integer.toString(0),i,1);
     }
+    jTable2.getModel().setValueAt(Integer.toString(268468244),28,1);
+    jTable2.getModel().setValueAt(Integer.toString(2147483644),29,1);
+    Register[28] = 268468244;
+    Register[29] = 2147483644;
 
     for(int i = 0; i < jTable3.getRowCount(); i++){
       jTable3.getModel().setValueAt(null,i,0);
@@ -1068,7 +1115,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
       jTable4.getModel().setValueAt(null,i,1);
     }
 
-    dataSection = new byte[2];                    // for data section's contents (unit of memory is byte)
+    dataSection = new byte[1000];                    // for data section's contents (unit of memory is byte)
     dataLabel = new String[2];
     dataPointer = 0;
     PC_base = 0x00400000;                         // default PC based address        
@@ -1237,7 +1284,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
   public static int execute(int index){                      // Input is the index of "Instruction" and "Address"
     scrollToCenter(jTable1, index, 0);
     String[] I = Instruction[index];
-    int r_index, s1_index, s2_index, immediate;
+    int r_index, s1_index, s2_index, immediate = 0;
     int find_out = -1;		
 
     if(I[1] == null)                                   // There is no instruction in this element
@@ -1259,6 +1306,21 @@ public class MIPSsimulator extends javax.swing.JFrame {
     }
     jTable2.selectAll();
     jTable2.clearSelection();
+
+    for(int i = 0; i < jTable3.getRowCount(); i++){
+      ColorTable3[i][0] = 0;			 
+      ColorTable3[i][1] = 0;
+      ColorTable3[i][2] = 0;
+    }
+    jTable3.selectAll();
+    jTable3.clearSelection();
+
+    for(int i = 0; i < jTable4.getRowCount(); i++){
+      ColorTable4[i][0] = 0;			 
+      ColorTable4[i][1] = 0;
+    }
+    jTable4.selectAll();
+    jTable4.clearSelection();
 
     switch(Op.toOp(I[1])){
 
@@ -1318,10 +1380,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);                 // set value in Reg Table 
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -1329,6 +1387,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -1384,10 +1446,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);			
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -1395,6 +1453,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -1450,10 +1512,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);		
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -1461,6 +1519,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -1516,10 +1578,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);			
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -1527,6 +1585,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -1549,23 +1611,525 @@ public class MIPSsimulator extends javax.swing.JFrame {
           System.out.println("Error: Can not use $zero as a destination register !");
           return -1;				
         }
+
         // parse the "k($src)" operator
-        String lwsw_pattern = "\\d+\\(\\$\\.+\\)$";
-        Pattern r = Pattern.compile(lwsw_pattern);
-        Matcher m = r.matcher(I[3]);
-        if(!m.find()){
-          System.out.println("Error: Invalid operator " + I[3] + " !");
+        String[] p_split = null;
+        if((I[3].substring(I[3].length() - 1, I[3].length())).equals(")") && Array.getLength(I[3].split("\\(")) == 2){
+          String back_p_split = I[3].substring(0,I[3].length()-1);
+          p_split = back_p_split.split("\\(");
+        }
+        // test offset !
+        if(MIPSsimulator.is_number(p_split[0])){
+          immediate = Integer.parseInt(p_split[0]);
+          if(!(immediate % 4 == 0)){
+            System.out.println("Error: Invalid offset " + p_split[0] + " !");
+            return -1;
+          }
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(p_split[1]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + p_split[1] + " !"); 
+          return -1;
+        }
+        // test $sr1 + offset
+        immediate = Register[s1_index] + immediate;
+        if(!(immediate % 4 == 0)){
+          System.out.println("Error: Invalid offset " + immediate + " !");
+          return -1;
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        int result = 0;
+        int load_index = (0x10008000 - immediate)/4;
+
+        if(immediate >= 0x10000004 && immediate <= 0x10008000){                          //               Static Data Section
+          if(load_index <= (jTable3.getRowCount() - 1)){                                 //               Data in displayed Table3
+            if(jTable3.getValueAt(load_index, 0) == null){                               //               in Table, but Not Displayed  
+              for(int i = 0; i <= load_index; i++){
+                jTable3.setValueAt("0x".concat(Integer.toString(0x10008000 - i*4, 16)), i, 0);    
+              }
+              result = 0;
+            }
+            else if(jTable3.getValueAt(load_index, 2) == null){
+              result = 0;
+            }
+            else{                                                                        //               Displayed in Table
+              String str = (String)jTable3.getValueAt(load_index, 2);          
+              System.out.println(jTable3.getValueAt(0,2));
+              if(!MIPSsimulator.is_number(str)){                                         // Not Number
+                if((str.substring(0,2).equals("0x") || str.substring(0,2).equals("0X"))   &&    MIPSsimulator.is_number_hex(str.substring(2))){
+                  result = Integer.parseInt(str.substring(2),16);                        // Hex Number
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+                else{                                                                    // Text
+                  byte[] bytes = str.getBytes(); 
+                  result = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+              }
+              else if(MIPSsimulator.is_number(str)){                                     // Decimal Number
+                result = Integer.parseInt(str);
+                Register[r_index] = result;
+                jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+              }
+            }
+            scrollToCenter(jTable3, load_index, 0);
+            ColorTable3[load_index][0] = -2;
+            ColorTable3[load_index][1] = -2;
+            ColorTable3[load_index][2] = -2;
+            jTable3.selectAll();
+            jTable3.clearSelection();
+          }            
+          else{                                                                          
+            System.out.println("The value which is loaded is 0");
+            result = 0;            
+          }
+        }
+
+        if(immediate <= 0x7ffffffc && immediate >= 0x10008004){                          // Stack Section
+          load_index = (0x7ffffffc - immediate)/4;
+
+          if(load_index <= (jTable4.getRowCount() - 1)){                                 //               Data in displayed Table4
+            if(jTable4.getValueAt(load_index, 0) == null){                               //               in Table, but Not Displayed  
+              for(int i = 0; i <= load_index; i++){
+                jTable4.setValueAt("0x".concat(Integer.toString(0x7ffffffc - i*4, 16)), i, 0); 
+              }
+              result = 0;
+            }
+            else if(jTable4.getValueAt(load_index, 1) == null){
+              result = 0;
+            }
+            else{                                                                        //               Displayed in Table
+              String str = (String)jTable4.getValueAt(load_index, 2);          
+              if(!MIPSsimulator.is_number(str)){                                         // Not Number
+                if((str.substring(0,2).equals("0x") || str.substring(0,2).equals("0X"))   &&    MIPSsimulator.is_number_hex(str.substring(2))){
+                  result = Integer.parseInt(str.substring(2),16);                        // Hex Number
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+                else{                                                                         //Text
+                  byte[] bytes = str.getBytes(); 
+                  result = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+              }
+              else if(MIPSsimulator.is_number(str)){                                     // Decimal Number
+                result = Integer.parseInt(str);
+                Register[r_index] = result;
+                jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+              }
+            }
+            scrollToCenter(jTable4, load_index, 0);
+            ColorTable4[load_index][0] = -2;
+            ColorTable4[load_index][1] = -2;
+            jTable4.selectAll();
+            jTable4.clearSelection();
+          }            
+          else{                                                                           //  to Data which is not displayed in Table3
+            System.out.println("The value which is loaded is 0");
+            result = 0;            
+          }
+        }
+
+        if(immediate < 0x10000000 || immediate > 0x7ffffffc){                    // Invalid Address!!! 
+          System.out.println("Invalid loading address !");
           return -1;
         }
         //not finished!!!
 
+        if(result == 0){
+          Register[r_index] = 0;
+          jTable2.getModel().setValueAt(Integer.toString(0), r_index, 1);
+        }
+        ColorTable2[s1_index][0] = -2;		 
+        ColorTable2[s1_index][1] = -2;
+
+        ColorTable2[r_index][0] = -1;			                      // set destination and source register to new color
+        ColorTable2[r_index][1] = -1;
+
+        jTable2.selectAll();
+        jTable2.clearSelection();
+        return 1;
 
       case sw:
 
+        if(I[2] == null || I[3] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <sw> !");
+          return -1;	           
+        } 
+        // test s2;
+        s2_index = MIPSsimulator.find_reg(I[2]);
+        if(s2_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        // parse the "k($src)" operator
+        String[] p_split2 = null;
+        if((I[3].substring(I[3].length() - 1, I[3].length())).equals(")") && Array.getLength(I[3].split("\\(")) == 2){
+          String back_p_split = I[3].substring(0,I[3].length()-1);
+          p_split2 = back_p_split.split("\\(");
+        }
+        // test offset !
+        if(MIPSsimulator.is_number(p_split2[0])){
+          immediate = Integer.parseInt(p_split2[0]);
+          if(!(immediate % 4 == 0)){
+            System.out.println("Error: Invalid offset " + p_split2[0] + " !");
+            return -1;
+          }
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(p_split2[1]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + p_split2[1] + " !"); 
+          return -1;
+        }
+        // test $sr1 + offset
+        immediate = Register[s1_index] + immediate;
+        if(!(immediate % 4 == 0)){
+          System.out.println("Error: Invalid offset " + immediate + " !");
+          return -1;
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        load_index = (0x10008000 - immediate)/4;
+
+        if(immediate >= 0x10000004 && immediate <= 0x10008000){                          //               Static Data Section
+          if(load_index <= (jTable3.getRowCount() - 1)){                                 //               Data in displayed Table3
+            if(jTable3.getValueAt(load_index, 0) == null){                               //               in Table, but Not Displayed  
+              for(int i = 0; i <= load_index; i++){
+                jTable3.setValueAt("0x".concat(Integer.toString(0x10008000 - i*4, 16)), i, 0);    
+              }
+              jTable3.getModel().setValueAt(Integer.toString(Register[s2_index]), load_index, 2);
+            }
+            else{                                                                        //               Displayed in Table
+              jTable3.getModel().setValueAt(Integer.toString(Register[s2_index]), load_index, 2);
+            }
+          }            
+          else{                                                                           
+            for(int i = 0; i <= load_index; i++){
+              System.out.println(i);
+              jTable3.setValueAt("0x".concat(Integer.toString(0x10008000 - i*4, 16)), i, 0);    
+            }
+            jTable3.getModel().setValueAt(Integer.toString(Register[s2_index]), load_index, 2);
+          }
+
+          scrollToCenter(jTable3, load_index, 0);
+          ColorTable3[load_index][0] = -1;
+          ColorTable3[load_index][1] = -1;
+          ColorTable3[load_index][2] = -1;
+          jTable3.selectAll();
+          jTable3.clearSelection();
+        }
+
+        load_index = (0x7ffffffc - immediate)/4;
+
+        if(immediate <= 0x7ffffffc && immediate >= 0x10008004){                          // Stack Section
+          if(load_index <= (jTable4.getRowCount() - 1)){                                 //               Data in displayed Table4
+            if(jTable4.getValueAt(load_index, 0) == null){                               //               in Table, but Not Displayed  
+              for(int i = 0; i <= load_index; i++){
+                jTable4.setValueAt("0x".concat(Integer.toString(0x7ffffffc - i*4, 16)), i, 0); 
+              }
+              jTable4.getModel().setValueAt(Integer.toString(Register[s2_index]), load_index, 1);
+            }
+            else{
+              jTable4.getModel().setValueAt(Integer.toString(Register[s2_index]), load_index, 1);
+            }
+          }
+          else{
+              for(int i = 0; i <= load_index; i++){
+                jTable4.setValueAt("0x".concat(Integer.toString(0x7ffffffc - i*4, 16)), i, 0); 
+              }
+              jTable4.getModel().setValueAt(Integer.toString(Register[s2_index]), load_index, 1);
+          }
+          scrollToCenter(jTable4, load_index, 0);
+          ColorTable4[load_index][0] = -1;
+          ColorTable4[load_index][1] = -1;
+          jTable4.selectAll();
+          jTable4.clearSelection();
+        }
+
+        if(immediate < 0x10000000 || immediate > 0x7ffffffc){
+          System.out.println("Invalid storing address !");
+          return -1;
+        }
+
+        ColorTable2[s1_index][0] = -2;		 
+        ColorTable2[s1_index][1] = -2;
+
+        ColorTable2[s2_index][0] = -2;			     // set destination and source register to new color
+        ColorTable2[s2_index][1] = -2;
+
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;
       case lb:
 
+        // test number of register
+        if(I[2] == null || I[3] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <lw(i)> !");
+          return -1;	           
+        } 
+        // test r
+        r_index = MIPSsimulator.find_reg(I[2]);
+        if(r_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        else if(r_index == 0){
+          System.out.println("Error: Can not use $zero as a destination register !");
+          return -1;				
+        }
+
+        // parse the "k($src)" operator
+        p_split = null;
+        if((I[3].substring(I[3].length() - 1, I[3].length())).equals(")") && Array.getLength(I[3].split("\\(")) == 2){
+          String back_p_split = I[3].substring(0,I[3].length()-1);
+          p_split = back_p_split.split("\\(");
+        }
+        // test offset !
+        if(MIPSsimulator.is_number(p_split[0])){
+          immediate = Integer.parseInt(p_split[0]);
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(p_split[1]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + p_split[1] + " !"); 
+          return -1;
+        }
+        // test $sr1 + offset
+        immediate = Register[s1_index] + immediate;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        result = 0;
+        load_index = (0x10008000 - immediate)/4;
+	int byte_index = immediate%4;                                                                               // Different bewteen LW and LB
+
+        if(immediate >= 0x10000004 && immediate <= 0x10008000){                          // Static Data Section
+          if(load_index <= (jTable3.getRowCount() - 1)){                                 // Data in displayed Table3
+            if(jTable3.getValueAt(load_index, 0) == null){                               // in Table, but Not Displayed  
+              for(int i = 0; i <= load_index; i++){
+                jTable3.setValueAt("0x".concat(Integer.toString(0x10008000 - i*4, 16)), i, 0);    
+              }
+              result = 0;
+            }
+            else{                                                                        // Displayed in Table
+              String str = (String)jTable3.getValueAt(load_index, 2);          
+              if(!MIPSsimulator.is_number(str)){                                         // Not Number
+                if((str.substring(0,2).equals("0x") || str.substring(0,2).equals("0X"))   &&    MIPSsimulator.is_number_hex(str.substring(2))){
+                  result = Integer.parseInt(str.substring(2),16);                        // Hex Number
+		  result = (result >> byte_index*8) & 0x000000ff;                                                  // Different bewteen LW and LB
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+                else{                                                                    // Text
+                  byte[] bytes = str.getBytes(); 
+                  result = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+		  result = (result >> byte_index*8) & 0x000000ff;                                                  // Different bewteen LW and LB
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+              }
+              else if(MIPSsimulator.is_number(str)){                                     // Decimal Number
+                result = Integer.parseInt(str);
+		result = (result >> byte_index*8) & 0x000000ff;                                                    // Different bewteen LW and LB
+                Register[r_index] = result;
+                jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+              }
+            }
+            scrollToCenter(jTable3, load_index, 0);
+            ColorTable3[load_index][0] = -2;
+            ColorTable3[load_index][1] = -2;
+            ColorTable3[load_index][2] = -2;
+            jTable3.selectAll();
+            jTable3.clearSelection();
+          }            
+          else{                                                                          
+            System.out.println("The value which is loaded is 0");
+            result = 0;            
+          }
+        }
+
+        if(immediate <= 0x7ffffffc && immediate >= 0x10008004){                          // Stack Section
+          load_index = (0x7ffffffc - immediate)/4;
+
+          if(load_index <= (jTable4.getRowCount() - 1)){                                 //               Data in displayed Table4
+            if(jTable4.getValueAt(load_index, 0) == null){                               //               in Table, but Not Displayed  
+              //System.out.println(load_index);
+              for(int i = 0; i <= load_index; i++){
+                jTable4.setValueAt("0x".concat(Integer.toString(0x7ffffffc - i*4, 16)), i, 0); 
+              }
+              result = 0;
+            }
+            else{                                                                        //               Displayed in Table
+              String str = (String)jTable4.getValueAt(load_index, 1);          
+              if(!MIPSsimulator.is_number(str)){                                         // Not Number
+                if((str.substring(0,2).equals("0x") || str.substring(0,2).equals("0X"))   &&    MIPSsimulator.is_number_hex(str.substring(2))){
+                  result = Integer.parseInt(str.substring(2),16);                        // Hex Number
+		  result = (result >> byte_index*8) & 0x000000ff;                                                  // Different bewteen LW and LB
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+                else{                                                                         //Text
+                  byte[] bytes = str.getBytes(); 
+                  result = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+		  result = (result >> byte_index*8) & 0x000000ff;                                                  // Different bewteen LW and LB
+                  Register[r_index] = result;
+                  jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+                }
+              }
+              else if(MIPSsimulator.is_number(str)){                                     // Decimal Number
+                result = Integer.parseInt(str);
+		result = (result >> byte_index*8) & 0x000000ff;                                                    // Different bewteen LW and LB
+                Register[r_index] = result;
+                jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
+              }
+            }
+            scrollToCenter(jTable4, load_index, 0);
+            ColorTable4[load_index][0] = -2;
+            ColorTable4[load_index][1] = -2;
+            jTable4.selectAll();
+            jTable4.clearSelection();
+          }            
+          else{                                                                           //  to Data which is not displayed in Table3
+            System.out.println("The value which is loaded is 0");
+            result = 0;            
+          }
+        }
+
+        if(immediate < 0x10000000 || immediate > 0x7ffffffc){                    // Invalid Address!!! 
+          System.out.println("Invalid loading address !");
+          return -1;
+        }
+
+        if(result == 0){
+          Register[r_index] = 0;
+          jTable2.getModel().setValueAt(0, r_index, 1);
+        }
+        ColorTable2[s1_index][0] = -2;		 
+        ColorTable2[s1_index][1] = -2;
+
+        ColorTable2[r_index][0] = -1;			                      // set destination and source register to new color
+        ColorTable2[r_index][1] = -1;
+
+        jTable2.selectAll();
+        jTable2.clearSelection();
+        return 1;
       case sb:
 
+        if(I[2] == null || I[3] == null){
+          System.out.println("Error: Inadequate number of arguements for operation <sw> !");
+          return -1;	           
+        } 
+        // test s2;
+        s2_index = MIPSsimulator.find_reg(I[2]);
+        if(s2_index == -1){
+          System.out.println("Error: Unknown register " + I[2] + " !");           				 
+          return -1;
+        }
+        // parse the "k($src)" operator
+        p_split2 = null;
+        if((I[3].substring(I[3].length() - 1, I[3].length())).equals(")") && Array.getLength(I[3].split("\\(")) == 2){
+          String back_p_split = I[3].substring(0,I[3].length()-1);
+          p_split2 = back_p_split.split("\\(");
+        }
+        // test offset !
+        if(MIPSsimulator.is_number(p_split2[0])){
+          immediate = Integer.parseInt(p_split2[0]);
+        }
+        // test s1
+        s1_index = MIPSsimulator.find_reg(p_split2[1]);
+        if(s1_index == -1){
+          System.out.println("Error: Unknown register " + p_split2[1] + " !"); 
+          return -1;
+        }
+        // test $sr1 + offset
+        immediate = Register[s1_index] + immediate;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        load_index = (0x10008000 - immediate)/4;
+        byte_index = immediate%4;                                                                               // Different bewteen LW and LB
+	result = 0;                                                                                             // Different bewteen LW and LB
+
+        if(immediate >= 0x10000004 && immediate <= 0x10008000){                          // Static Data Section
+          if(load_index <= (jTable3.getRowCount() - 1)){                                 // Data in displayed Table3
+            if(jTable3.getValueAt(load_index, 0) == null){                               // in Table, but Not Displayed  
+              for(int i = 0; i <= load_index; i++){
+                jTable3.setValueAt("0x".concat(Integer.toString(0x10008000 - i*4, 16)), i, 0);    
+              }
+              result = (Register[s2_index] & 0x000000ff) << (8*byte_index);                                      // Different bewteen LW and LB
+              jTable3.getModel().setValueAt(Integer.toString(result), load_index, 2);
+            }
+            else{                                                                        // Displayed in Table
+              result = (Register[s2_index] & 0x000000ff) << (8*byte_index);                                      // Different bewteen LW and LB
+              jTable3.getModel().setValueAt(Integer.toString(result), load_index, 2);
+            }
+          }            
+          else{                                                                           
+            for(int i = 0; i <= load_index; i++){
+              jTable3.setValueAt("0x".concat(Integer.toString(0x10008000 - i*4, 16)), i, 0);    
+            }
+            result = (Register[s2_index] & 0x000000ff) << (8*byte_index);                                        // Different bewteen LW and LB
+            jTable3.getModel().setValueAt(Integer.toString(result), load_index, 2);
+          }
+
+          scrollToCenter(jTable3, load_index, 0);
+          ColorTable3[load_index][0] = -1;
+          ColorTable3[load_index][1] = -1;
+          ColorTable3[load_index][2] = -1;
+          jTable3.selectAll();
+          jTable3.clearSelection();
+
+        }
+
+        load_index = (0x7ffffffc - immediate)/4;
+
+        if(immediate <= 0x7ffffffc && immediate >= 0x10008004){                          // Stack Section
+          if(load_index <= (jTable4.getRowCount() - 1)){                                 // Data in Table4
+            if(jTable4.getValueAt(load_index, 0) == null){                               // in Table, but Not Displayed  
+              for(int i = 0; i <= load_index; i++){
+                jTable4.setValueAt("0x".concat(Integer.toString(0x7ffffffc - i*4, 16)), i, 0); 
+              }
+              result = (Register[s2_index] & 0x000000ff) << (8*byte_index);                                        // Different bewteen LW and LB
+              jTable4.getModel().setValueAt(Integer.toString(result), load_index, 1);
+            }
+            else{
+              result = (Register[s2_index] & 0x000000ff) << (8*byte_index);                                        // Different bewteen LW and LB
+              jTable4.getModel().setValueAt(Integer.toString(result), load_index, 1);
+            }
+          }
+          else{
+              for(int i = 0; i <= load_index; i++){
+                jTable4.setValueAt("0x".concat(Integer.toString(0x7ffffffc - i*4, 16)), i, 0); 
+              }
+              result = (Register[s2_index] & 0x000000ff) << (8*byte_index);                                        // Different bewteen LW and LB
+              jTable4.getModel().setValueAt(Integer.toString(result), load_index, 1);
+          }
+
+          scrollToCenter(jTable3, load_index, 0);
+          ColorTable4[load_index][0] = -1;
+          ColorTable4[load_index][1] = -1;
+          jTable4.selectAll();
+          jTable4.clearSelection();
+        }
+
+        if(immediate < 0x10000000 || immediate > 0x7ffffffc){
+          System.out.println("Invalid storing address !");
+          return -1;
+        }
+
+        ColorTable2[s1_index][0] = -2;		 
+        ColorTable2[s1_index][1] = -2;
+
+        ColorTable2[s2_index][0] = -2;			     // set destination and source register to new color
+        ColorTable2[s2_index][1] = -2;
+
+        jTable2.selectAll();
+        jTable2.clearSelection();
+
+        return 1;
       case li:
 
         if (I[4] != null) {
@@ -1647,6 +2211,14 @@ public class MIPSsimulator extends javax.swing.JFrame {
             find_out = i;
             break;			
           }	
+        }
+        if(find_out == -1){
+          for(int i = 0; jTable3.getModel().getValueAt(i, 0) != null; i++){
+            if(jTable3.getValueAt(i, 1) != null && jTable3.getValueAt(i, 1).equals(I[3])){
+              find_out = i;
+              break;
+            }
+          }
         }
 
         if(find_out != -1){
@@ -1942,10 +2514,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);	
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -1953,6 +2521,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -1997,10 +2569,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);	
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -2008,6 +2576,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -2052,10 +2624,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);	
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -2063,6 +2631,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -2107,10 +2679,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);	
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
@@ -2118,6 +2686,10 @@ public class MIPSsimulator extends javax.swing.JFrame {
         if(s2_index != -1){
           ColorTable2[s2_index][0] = -2;		
           ColorTable2[s2_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -2166,13 +2738,13 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
         }
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
 
         jTable2.selectAll();
@@ -2221,13 +2793,13 @@ public class MIPSsimulator extends javax.swing.JFrame {
           jTable2.getModel().setValueAt(Integer.toString(Register[r_index]), r_index, 1);
         }	
 
-        if(r_index != -1){
-          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
-          ColorTable2[r_index][1] = -1;
-        }
         if(s1_index != -1){
           ColorTable2[s1_index][0] = -2;		 
           ColorTable2[s1_index][1] = -2;
+        }
+        if(r_index != -1){
+          ColorTable2[r_index][0] = -1;			     // set destination and source register to new color
+          ColorTable2[r_index][1] = -1;
         }
         jTable2.selectAll();
         jTable2.clearSelection();
@@ -2284,7 +2856,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
       colon_split[1] = colon_split[1].trim();
       if (dataPointer >= dataLabel.length) {
         String[] Temp = dataLabel;
-        dataLabel = new String[dataLabel.length + 100];
+        dataLabel = new String[dataLabel.length + 1000];
         System.arraycopy(Temp, 0, dataLabel, 0, Temp.length);
       }
       for (int j = 0; j < dataLabel.length; j++) {
@@ -2324,18 +2896,46 @@ public class MIPSsimulator extends javax.swing.JFrame {
       }
       else {
         for (int i = 2; i < quote_split.length; i++) {
+          quote_split[1] = quote_split[1].concat("\"");
           quote_split[1] = quote_split[1].concat(quote_split[i]);
           text = quote_split[1];
         }
       }
+
       byte[] byteData = text.getBytes();
+      
+      for (int i = 0; i < byteData.length; i++) {                           //handle illegal quote
+        if (byteData[i] == 0x22) {
+          if (i == 0)
+            return -1;
+          if (byteData[i-1] != 0x5c)
+            return -1;
+        }
+      }
+
+      for (int i = 0; i < byteData.length; i++) {                           //handle escape character
+        if (byteData[i] == 0x5c) {
+          if (i != (byteData.length -1) ) {
+            if (byteData[i+1] == 0x74)
+              byteData[i+1] = 0x09;
+            if (byteData[i+1] == 0x6e)
+              byteData[i+1] = 0xa;
+          }
+          byte[] Temp = byteData;
+          byteData = new byte[Temp.length - 1];
+          System.arraycopy(Temp, 0, byteData, 0, i);
+          System.arraycopy(Temp, i+1, byteData, i, (Temp.length)-i-1);
+        }
+      }
+      
+
       for (int i = 0, index = 0; i < Array.getLength(byteData); i++) {
         if (i % 4 == 0) {
           index = i + 3;
         }
         if (dataPointer + index >= dataSection.length) {
           byte[] Temp = dataSection;
-          dataSection = new byte[dataSection.length + 100];
+          dataSection = new byte[dataSection.length + 5000];
           System.arraycopy(Temp,0,dataSection,0,Temp.length);	
         }
         dataSection[dataPointer + index] = byteData[i];
@@ -2369,7 +2969,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
         int index = Integer.parseInt(extracted_data) * 4;
         if (dataPointer + index >= dataSection.length) {
           byte[] Temp = dataSection;
-          dataSection = new byte[dataSection.length + 100];
+          dataSection = new byte[dataSection.length + 5000];
           System.arraycopy(Temp,0,dataSection,0,Temp.length);
         }
         dataPointer = dataPointer + index;
@@ -2378,7 +2978,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
         int index = Integer.parseInt(extracted_data.substring(2), 16) * 4;
         if (dataPointer + index >= dataSection.length) {
           byte[] Temp = dataSection;
-          dataSection = new byte[dataSection.length + 100];
+          dataSection = new byte[dataSection.length + 5000];
           System.arraycopy(Temp,0,dataSection,0,Temp.length);
         }
         dataPointer = dataPointer + index;
@@ -2400,7 +3000,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
           }	
           if (dataPointer + index >= dataSection.length) {
             byte[] Temp = dataSection;
-            dataSection = new byte[dataSection.length + 100];
+            dataSection = new byte[dataSection.length + 5000];
             System.arraycopy(Temp,0,dataSection,0,Temp.length);	
           }
           dataSection[dataPointer + index] = (byte) Integer.parseInt(datas[i]); 
@@ -2412,7 +3012,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
           }
           if (dataPointer + index >= dataSection.length) {
             byte[] Temp = dataSection;
-            dataSection = new byte[dataSection.length + 100];
+            dataSection = new byte[dataSection.length + 5000];
             System.arraycopy(Temp,0,dataSection,0,Temp.length);	
           }
           dataSection[dataPointer + index] = (byte) Integer.parseInt(datas[i].substring(2), 16);
@@ -2447,7 +3047,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
 
           if (dataPointer + 10 >= dataSection.length) {
             byte[] Temp = dataSection;
-            dataSection = new byte[dataSection.length + 100];
+            dataSection = new byte[dataSection.length + 5000];
             System.arraycopy(Temp,0,dataSection,0,Temp.length);	
           }
           dataSection[dataPointer++] = seperated_data[3];
@@ -2465,7 +3065,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
 
           if (dataPointer + 10 >= dataSection.length) {
             byte[] Temp = dataSection;
-            dataSection = new byte[dataSection.length + 100];
+            dataSection = new byte[dataSection.length + 5000];
             System.arraycopy(Temp,0,dataSection,0,Temp.length);	
           }
           dataSection[dataPointer++] = seperated_data[3];
@@ -2570,10 +3170,15 @@ public class MIPSsimulator extends javax.swing.JFrame {
   }
 
   private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{                       // Reload !!!!
-    initializeData();
-    is_pause = true;
-    loadFile(myfile);
-    System.out.println("Reload Success");                            
+    try{
+      initializeData();
+      is_pause = true;
+      loadFile(myfile);
+      System.out.println("Reload Success");                            
+    }
+    catch(Exception ex){
+      System.out.println("Reload Faile");
+    }
   }                                        
 
   private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{                       // Go !!!!!
@@ -2603,7 +3208,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
               ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -3;           // set the error line to be red
               ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -3;
               ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -3;
-              int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
+              //int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
               //Scrolling.scrollVertically(jTable1, JTableScrolling.getRowBounds(jTable1, i));
               //jTable1.scrollRectToVisible(jTable1.getCellRect( ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)), 2, false));
               jTable1.selectAll();
@@ -2633,7 +3238,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
               ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
 
               //Scrolling.scrollVertically(jTable1, JTableScrolling.getRowBounds(jTable1, i));
-              int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
+              //int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
               //jTable1.scrollRectToVisible(jTable1.getCellRect( ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)), 0, false));
               jTable1.selectAll();
               jTable1.clearSelection();
@@ -2680,8 +3285,6 @@ public class MIPSsimulator extends javax.swing.JFrame {
 
   private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) throws Exception{               // Step !!!!!
 
-    //is_pause = false;
-
     for(int i = 0; i < number_of_break; i++){							 // detect if any break point is reached!
       if(((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)) == MIPSsimulator.BreakArray[i]){
         System.out.println("Encounter breakpoint! Remove breakpoint before continuing !");
@@ -2704,7 +3307,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
           ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -3;           // set the error line to be red
           ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -3;
           ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -3;
-          int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
+          //int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
           //Scrolling.scrollVertically(jTable1, JTableScrolling.getRowBounds(jTable1, i));
           //jTable1.scrollRectToVisible(jTable1.getCellRect( ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)), 0, false));
           jTable1.selectAll();
@@ -2725,7 +3328,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
           ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][0] = -1;		  // set the running line to be orange
           ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][1] = -1;
           ColorTable[((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4))][2] = -1;
-          int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
+          //int i = ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4));
           //Scrolling.scrollVertically(jTable1, JTableScrolling.getRowBounds(jTable1, i));
           //jTable1.scrollRectToVisible(jTable1.getCellRect( ((PC-PC_base == 0) ? 0 : ((PC-PC_base)/4)), 0, false));
           jTable1.selectAll();
@@ -2816,7 +3419,7 @@ public class MIPSsimulator extends javax.swing.JFrame {
   }                                        
 
   private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         //Format
-    //try {
+    try {
     int selectedIndex = jList1.getSelectedIndex();
     char selectedFormat = 0;
     if (selectedIndex == 0) {selectedFormat = 'd';}
@@ -2862,30 +3465,156 @@ public class MIPSsimulator extends javax.swing.JFrame {
         }
       }
     }
-    // } catch (Exception whatever) {
-    //   ;
-    // }
+     } catch (Exception whatever) {
+       ;
+     }
   }
 
-  private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    // TODO add your handling code here:
-  }                                        
+  int Table_index, Table_num;
+
+  private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {           
+    String input_text = jTextField1.getText();
+    if(input_text.length() == 1)
+      input_text = " ".concat(input_text);
+
+    if(Table_num == 1){
+      ColorTable[Table_index][1] = 0;
+      ColorTable[Table_index][0] = 0;
+      jTable1.selectAll();
+      jTable1.clearSelection();
+    }
+    else if(Table_num == 3){
+      ColorTable3[Table_index][1] = 0;
+      ColorTable3[Table_index][0] = 0;
+      jTable3.selectAll();
+      jTable3.clearSelection();
+    }
+    else if(Table_num == 4){
+      ColorTable4[Table_index][0] = 0;
+      jTable4.selectAll();
+      jTable4.clearSelection();
+    }
+
+    if( ((input_text.substring(0,2).equals("0x") || input_text.substring(0,2).equals("0X")) && MIPSsimulator.is_number_hex(input_text.substring(2)) ) 
+        || MIPSsimulator.is_number(input_text)){  // Input is Number 
+      int dataAddr;
+
+      if((input_text.substring(0,2).equals("0x") || input_text.substring(0,2).equals("0X")) && MIPSsimulator.is_number_hex(input_text.substring(2))){          // Hex Number
+        input_text = input_text.substring(2);
+        System.out.println(input_text);
+        dataAddr = Integer.parseInt(input_text,16);
+        System.out.println("10: "+dataAddr);
+      }
+      else                                                                                                        // Desimal
+        dataAddr = Integer.parseInt(input_text);
+
+      if(dataAddr >= 0x400000 && dataAddr <= 0x10000000 && dataAddr%4 == 0){                                      // Instruction Section
+        Table_index = (dataAddr-0x400000)/4;
+        if(Table_index < jTable1.getRowCount()){                                                                  // dataAddr is shown in Table
+          System.out.println("Table_index " + Table_index);
+          Table_num = 1;
+          ColorTable[Table_index][0] = -4;
+          jTable1.selectAll();
+          jTable1.clearSelection();
+        }
+        else
+          System.out.println("The data in this address remains initial value (Never Changed)");
+      }
+      else if(dataAddr >= 0x10000004 && dataAddr <= 0x10008000 && dataAddr%4 == 0){    // Data Section (Memory Section)
+        Table_index = (0x10008000-dataAddr)/4;
+        if(Table_index < jTable3.getRowCount()){
+          if(jTable3.getValueAt(Table_index, 0) == null){                               //               in Table, but Not Displayed  
+            for(int i = 0; i <= Table_index; i++){
+              jTable3.setValueAt("0x".concat(Integer.toString(0x10008000 - i*4, 16)), i, 0);    
+            }
+          }
+          Table_num = 3;
+          ColorTable3[Table_index][0] = -3;
+          jTable3.selectAll();
+          jTable3.clearSelection();
+        }
+        else
+          System.out.println("The data in this address remains initial value (Never Changed)");
+      }
+      else if(dataAddr <= 0x7ffffffc && dataAddr >= 0x10008004 && dataAddr%4 == 0){    // Stack Section
+        Table_index = (0x7ffffffc-dataAddr)/4;
+        if(Table_index < jTable4.getRowCount()){
+          if(jTable4.getValueAt(Table_index, 0) == null){                               //               in Table, but Not Displayed  
+            for(int i = 0; i <= Table_index; i++){
+              jTable4.setValueAt("0x".concat(Integer.toString(0x7ffffffc - i*4, 16)), i, 0);    
+            }
+          }
+          Table_num = 4;
+          ColorTable4[Table_index][0] = -3;
+          jTable4.selectAll();
+          jTable4.clearSelection();
+        }
+        else
+          System.out.println("The data in this address remains initial value (Never Changed)");
+      }
+      else
+        System.out.println("Invalid Address !");
+        }
+
+    else{                                                                                                // Input is Text 
+      int i;
+      input_text = input_text.trim();
+      for(i = 0; (i < jTable1.getModel().getRowCount()) && (jTable1.getModel().getValueAt(i, 0) != null); i++){
+        if(MIPSsimulator.Instruction[i][0] != null && MIPSsimulator.Instruction[i][0].equals(input_text)){
+
+          break;			
+        }
+      }	
+
+      if(i < jTable1.getModel().getRowCount()){                                                          // Label is found in Instruction Section
+        Table_num = 1;
+        Table_index = i;
+        ColorTable[i][1] = -4;
+        jTable1.selectAll();
+        jTable1.clearSelection();
+      }
+
+      else if(i >= jTable1.getModel().getRowCount()){                                                    // Label is not found in Instruction Section
+        for(i = 0; i < Array.getLength(dataLabel); i++){
+          if(input_text.equals(dataLabel[i]))
+            break;
+        }
+
+        if(i < Array.getLength(dataLabel)){                                                              // found in Data Section
+          Table_num = 3;
+          Table_index = (i == 0)?0:(i/4);
+          ColorTable3[Table_index][1] = -3;
+          jTable3.selectAll();
+          jTable3.clearSelection();
+        }
+        else
+          System.out.println("Input data not found !");
+      }
+
+    }
+    if(Table_num == 1)
+      scrollToCenter(jTable1, Table_index, 0);
+    else if(Table_num == 3)
+      scrollToCenter(jTable3, Table_index, 0);
+    else if(Table_num == 4)
+      scrollToCenter(jTable4, Table_index, 0);
+  }                                                                          
 
   private static void changeFormat(JTable table, int tableIndex, int row, int column, char format) {
     String readIn = table.getValueAt(row, column).toString();
-    System.out.println("readIn is: " + readIn);
-    System.out.println("column is: " + column +"\n"+"tableIndex is: "+tableIndex+"\n"+"row is: "+row);
-    System.out.println("currentFormat = " + dataFormat[row]);
+    //System.out.println("readIn is: " + readIn);
+    //System.out.println("column is: " + column +"\n"+"tableIndex is: "+tableIndex+"\n"+"row is: "+row);
+    //System.out.println("currentFormat = " + dataFormat[row]);
     char currentFormat = '0';
     if ( (column != 0) && (tableIndex == 2) ) {   //no need to know currentFormat of Table 1, because only address format can be transfered in T1.
       currentFormat = RegisterFormat[row];
       RegisterFormat[row] = format;
     }
     if ( (column != 0) && (tableIndex == 3) ) {
-      System.out.println("dataFormat[row] = currentFormat = "+dataFormat[row]);
+      //System.out.println("dataFormat[row] = currentFormat = "+dataFormat[row]);
       currentFormat = dataFormat[row];
       dataFormat[row] = format;
-      System.out.println("table = 3");
+      //System.out.println("table = 3");
     }
     if ( (column != 0) && (tableIndex == 4) ) {
       currentFormat = stackFormat[row];
@@ -2984,19 +3713,19 @@ public class MIPSsimulator extends javax.swing.JFrame {
           if (currentFormat == 't') {return;}
           else if (currentFormat == 'd') {
             int intData = Integer.parseInt(readIn, 10);
-            System.out.println("intData is: " + intData);
-            System.out.println("currentFormat is: "+currentFormat);
+            //System.out.println("intData is: " + intData);
+            //System.out.println("currentFormat is: "+currentFormat);
             byte b0 = (byte)intData;
-            System.out.println("b0 is: "+b0+"/"+(char)b0);
+            //System.out.println("b0 is: "+b0+"/"+(char)b0);
             byte b1 = (byte)(intData>>8);
-            System.out.println("b1 is: "+b1+"/"+(char)b1);
+            //System.out.println("b1 is: "+b1+"/"+(char)b1);
             byte b2 = (byte)(intData>>16);
-            System.out.println("b2 is: "+b2+"/"+(char)b2);
+            //System.out.println("b2 is: "+b2+"/"+(char)b2);
             byte b3 = (byte)(intData>>24);
-            System.out.println("b3 is: "+b3+"/"+(char)b3);
+            //System.out.println("b3 is: "+b3+"/"+(char)b3);
             byte[] bytes = {b3, b2, b1, b0};
             char[] text = bytesToChars(bytes);
-            System.out.println("text is: "+new String(text));
+            //System.out.println("text is: "+new String(text));
             table.setValueAt(new String(text), row, column);
           }
           else if (currentFormat == 'h') {
