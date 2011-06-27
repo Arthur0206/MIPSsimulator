@@ -1,4 +1,4 @@
-*cat file.c -- print the content of the file
+cat file.c -- print the content of the file
 *cat file.c | grep "this" -- pipe the stdout of "cat file.c" into the stdin of "grep "this"" (search "this" in file.c)
 *cat file.c | grep "this" | grep "are"
 *scp lcc001@ieng9.ucsd.edu:/home/solaris/ieng9/cs120f/lcc001/pa4/pa4b.c . -- login the serve ieng9.ucsd.edu server using user name lcc001, and download pa4b.c to current directory(".")  
